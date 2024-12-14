@@ -136,6 +136,8 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
           setGuess={setGuess}
           makeGuess={makeGuess}
           wrongGuessMessage={wrongGuessMessage}
+          attempt={attempts}
+          maxAttempts={maxAttempts}
         />
       )}
 
