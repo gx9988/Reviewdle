@@ -6,6 +6,7 @@ import { GameStats } from "@/components/GameStats";
 import { MovieResult } from "@/components/MovieResult";
 import { ProfileStats } from "@/components/ProfileStats";
 import { HowToPlay } from "@/components/HowToPlay";
+import { generateUniqueMessage } from "@/utils/messageGenerator";
 
 const movieLibrary = [
   {
@@ -78,22 +79,6 @@ const Index = () => {
     }));
   };
 
-  const getWrongGuessMessage = () => {
-    const messages = [
-      "Nice try! But that's as wrong as putting pineapple on pizza.",
-      "Ouch! That guess was further from the truth than my ex's promises.",
-      "Almost! Just kidding, not even close. Try again!",
-      "Did you even watch movies in the last century?",
-      "That's an... interesting guess. Bless your heart.",
-      "Plot twist: That's not it! Keep trying, movie rookie.",
-      "Are you sure you're not thinking of a different dimension's movies?",
-      "That guess was so off, it's actually impressive!",
-      "Maybe stick to watching cat videos for now?",
-      "Wrong! But hey, at least you're consistent at being incorrect!"
-    ];
-    return messages[Math.floor(Math.random() * messages.length)];
-  };
-
   const makeGuess = () => {
     if (!guess.trim()) return;
 
@@ -135,9 +120,10 @@ const Index = () => {
         saveGameState();
       } else {
         setAttempts(prev => prev + 1);
+        const uniqueMessage = generateUniqueMessage(Date.now(), attempts);
         toast({
           title: "Wrong Guess",
-          description: getWrongGuessMessage(),
+          description: uniqueMessage,
           variant: "destructive",
         });
       }
