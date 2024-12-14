@@ -3,7 +3,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface ProfileButtonProps {
   avatarUrl?: string | null;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent) => void;
 }
 
 export const ProfileButton = ({ avatarUrl, onClick }: ProfileButtonProps) => {

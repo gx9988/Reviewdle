@@ -109,7 +109,7 @@ export const ProfileStats = () => {
       <HoverCardTrigger asChild>
         <ProfileButton 
           avatarUrl={profile?.avatar_url}
-          onClick={(e) => {
+          onClick={(e: React.MouseEvent) => {
             if (isMobile) {
               e.stopPropagation();
               setIsOpen(!isOpen);
