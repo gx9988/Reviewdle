@@ -31,7 +31,7 @@ export const DateDisplay = () => {
 
   return (
     <p className="text-muted-foreground text-center mb-4 sm:mb-6">
-      {new Date().toLocaleDateString()} - <span className="text-muted-foreground">#{String(gameNumber).padStart(5, '0')}</span>
+      {new Date().toLocaleDateString()} - <span className="text-muted-foreground">Game #{String(gameNumber).padStart(5, '0')}</span>
     </p>
   );
 };
