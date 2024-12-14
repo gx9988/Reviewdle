@@ -4,9 +4,10 @@ interface GuessInputProps {
   guess: string;
   setGuess: (guess: string) => void;
   makeGuess: () => void;
+  wrongGuessMessage?: string;
 }
 
-export const GuessInput = ({ guess, setGuess, makeGuess }: GuessInputProps) => {
+export const GuessInput = ({ guess, setGuess, makeGuess, wrongGuessMessage }: GuessInputProps) => {
   return (
     <div className="flex flex-col items-center gap-3 sm:gap-4">
       <input
@@ -23,6 +24,11 @@ export const GuessInput = ({ guess, setGuess, makeGuess }: GuessInputProps) => {
       >
         Guess
       </button>
+      {wrongGuessMessage && (
+        <p className="text-destructive text-sm animate-fade-in italic">
+          {wrongGuessMessage}
+        </p>
+      )}
     </div>
   );
 };

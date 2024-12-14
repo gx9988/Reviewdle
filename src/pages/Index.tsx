@@ -31,6 +31,7 @@ const Index = () => {
   const [gameLost, setGameLost] = useState(false);
   const [guess, setGuess] = useState("");
   const [showMovie, setShowMovie] = useState(false);
+  const [wrongGuessMessage, setWrongGuessMessage] = useState<string>("");
   const maxAttempts = 5;
 
   useEffect(() => {
@@ -100,6 +101,7 @@ const Index = () => {
     if (normalizedGuess === normalizedTitle) {
       setGameWon(true);
       setShowMovie(true);
+      setWrongGuessMessage("");
       const streak = parseInt(localStorage.getItem('streak') || '0') + 1;
       localStorage.setItem('streak', streak.toString());
       toast({
@@ -121,6 +123,7 @@ const Index = () => {
       } else {
         setAttempts(prev => prev + 1);
         const uniqueMessage = generateUniqueMessage(Date.now(), attempts);
+        setWrongGuessMessage(uniqueMessage);
         toast({
           title: "Wrong Guess",
           description: uniqueMessage,
@@ -188,6 +191,7 @@ const Index = () => {
             guess={guess}
             setGuess={setGuess}
             makeGuess={makeGuess}
+            wrongGuessMessage={wrongGuessMessage}
           />
         )}
 
