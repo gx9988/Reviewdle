@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
 import { MovieReview } from "./MovieReview";
 import { GuessInput } from "./GuessInput";
-import { GameStats } from "./GameStats";
 import { MovieResult } from "./MovieResult";
 import { generateUniqueMessage } from "@/utils/messageGenerator";
 
@@ -140,11 +139,6 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
           maxAttempts={maxAttempts}
         />
       )}
-
-      <GameStats
-        attempts={attempts}
-        maxAttempts={maxAttempts}
-      />
 
       {gameLost && !showMovie && (
         <div className="flex justify-center mt-6">
