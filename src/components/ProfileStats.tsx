@@ -66,7 +66,8 @@ export const ProfileStats = () => {
   const handleSignIn = async () => {
     try {
       console.log("Starting Google sign in...");
-      const redirectURL = `${window.location.origin}`;
+      // Use the exact URL format including port 8080
+      const redirectURL = `http://localhost:8080`;
       console.log("Redirect URL:", redirectURL);
       
       const { data, error } = await supabase.auth.signInWithOAuth({
