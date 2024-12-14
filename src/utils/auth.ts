@@ -36,27 +36,20 @@ export const signInWithGoogle = async () => {
 };
 
 export const signOut = async () => {
-  try {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error("Sign out error:", error);
-      toast({
-        title: "Sign Out Failed",
-        description: error.message,
-        variant: "destructive",
-      });
-      return { error };
-    }
-    
-    window.location.reload();
-    return { error: null };
-  } catch (error) {
-    console.error("Error in signOut:", error);
+  const { error } = await supabase.auth.signOut();
+  
+  if (error) {
+    console.error("Sign out error:", error);
     toast({
-      title: "Error",
-      description: "An unexpected error occurred during sign out",
+      title: "Sign Out Failed",
+      description: error.message,
       variant: "destructive",
     });
-    return { error };
+    throw error;
   }
+  
+  toast({
+    title: "Success",
+    description: "Signed out successfully",
+  });
 };
