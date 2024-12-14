@@ -37,9 +37,7 @@ export const signInWithGoogle = async () => {
 
 export const signOut = async () => {
   try {
-    const { error } = await supabase.auth.signOut({
-      scope: 'global'
-    });
+    const { error } = await supabase.auth.signOut();
     
     if (error) {
       console.error("Sign out error:", error);
@@ -56,7 +54,6 @@ export const signOut = async () => {
       description: "Signed out successfully",
     });
 
-    // Force a page reload to clear all states
     window.location.reload();
   } catch (error) {
     console.error("Error in signOut:", error);
