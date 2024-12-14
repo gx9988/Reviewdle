@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 
 export const useAuth = () => {
   const [session, setSession] = useState<any>(null);
@@ -37,12 +38,26 @@ export const useAuth = () => {
 
       if (error) {
         console.error("Error updating profile avatar:", error);
+        toast({
+          title: "Error",
+          description: "Failed to update avatar",
+          variant: "destructive",
+        });
         return;
       }
       
       setProfile(prev => ({ ...prev, avatar_url: url }));
+      toast({
+        title: "Success",
+        description: "Avatar updated successfully",
+      });
     } catch (error) {
       console.error("Error in updateProfileAvatar:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
     }
   };
 
@@ -52,8 +67,10 @@ export const useAuth = () => {
       setSession(session);
       if (session?.user?.id) {
         getProfile(session.user.id);
-        if (session.user.user_metadata?.avatar_url) {
-          updateProfileAvatar(session.user.user_metadata.avatar_url);
+        // Get avatar URL from user metadata (Google auth)
+        const avatarUrl = session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture;
+        if (avatarUrl) {
+          updateProfileAvatar(avatarUrl);
         }
       }
     });
@@ -65,8 +82,10 @@ export const useAuth = () => {
       setSession(session);
       if (session?.user?.id) {
         await getProfile(session.user.id);
-        if (session.user.user_metadata?.avatar_url) {
-          await updateProfileAvatar(session.user.user_metadata.avatar_url);
+        // Get avatar URL from user metadata (Google auth)
+        const avatarUrl = session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture;
+        if (avatarUrl) {
+          await updateProfileAvatar(avatarUrl);
         }
       } else {
         setProfile(null);
