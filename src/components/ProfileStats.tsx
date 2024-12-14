@@ -27,6 +27,9 @@ export const ProfileStats = () => {
     }
   };
 
+  console.log("Current profile:", profile);
+  console.log("Current session:", session);
+
   return (
     <HoverCard 
       open={isMobile ? isOpen : undefined}
