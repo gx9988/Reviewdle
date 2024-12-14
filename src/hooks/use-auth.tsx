@@ -26,22 +26,23 @@ export const useAuth = () => {
     }
   };
 
-  const updateProfileAvatar = async (userId: string, avatarUrl: string) => {
-    try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ avatar_url: avatarUrl })
-        .eq('id', userId);
-
-      if (error) {
-        console.error("Error updating profile avatar:", error);
-        return;
-      }
-
-      setProfile(prev => ({ ...prev, avatar_url: avatarUrl }));
-    } catch (error) {
-      console.error("Error in updateProfileAvatar:", error);
-    }
+  const updateProfileAvatar = (url: string) => {
+    if (!session?.user?.id) return;
+    
+    return supabase
+      .from('profiles')
+      .update({ avatar_url: url })
+      .eq('id', session.user.id)
+      .then(({ error }) => {
+        if (error) {
+          console.error("Error updating profile avatar:", error);
+          return;
+        }
+        setProfile(prev => ({ ...prev, avatar_url: url }));
+      })
+      .catch((error) => {
+        console.error("Error in updateProfileAvatar:", error);
+      });
   };
 
   useEffect(() => {
@@ -51,7 +52,7 @@ export const useAuth = () => {
       if (session?.user?.id) {
         getProfile(session.user.id);
         if (session.user.user_metadata?.avatar_url) {
-          updateProfileAvatar(session.user.id, session.user.user_metadata.avatar_url);
+          updateProfileAvatar(session.user.user_metadata.avatar_url);
         }
       }
     });
@@ -64,7 +65,7 @@ export const useAuth = () => {
       if (session?.user?.id) {
         await getProfile(session.user.id);
         if (session.user.user_metadata?.avatar_url) {
-          await updateProfileAvatar(session.user.id, session.user.user_metadata.avatar_url);
+          await updateProfileAvatar(session.user.user_metadata.avatar_url);
         }
       } else {
         setProfile(null);
