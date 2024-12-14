@@ -165,10 +165,12 @@ const Index = () => {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-8 -mt-16 sm:-mt-20 relative z-10">
-        <div className="flex items-center justify-center gap-2 mb-2">
+        <div className="relative flex items-center justify-center mb-2">
           <h1 className="text-3xl sm:text-4xl font-bold">Reviewdle</h1>
-          <ProfileStats />
-          <HowToPlay />
+          <div className="absolute right-0 flex items-center gap-2">
+            <ProfileStats />
+            <HowToPlay />
+          </div>
         </div>
 
         <p className="text-muted-foreground text-center mb-6 sm:mb-8">
