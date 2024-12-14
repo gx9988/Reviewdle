@@ -1,4 +1,4 @@
-import { UserRound } from "lucide-react";
+import { UserRound, Upload } from "lucide-react";
 import {
   HoverCard,
   HoverCardContent,
@@ -9,16 +9,17 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "./ui/button";
 import { toast } from "@/hooks/use-toast";
+import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 
 export const ProfileStats = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [session, setSession] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
+  const [uploading, setUploading] = useState(false);
   const isMobile = useIsMobile();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log("Current session:", session);
       setSession(session);
       if (session?.user?.id) {
         getProfile(session.user.id);
@@ -28,7 +29,6 @@ export const ProfileStats = () => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log("Auth state changed:", _event, session);
       setSession(session);
       if (session?.user?.id) {
         getProfile(session.user.id);
@@ -56,27 +56,65 @@ export const ProfileStats = () => {
         return;
       }
 
-      console.log("Profile data:", data);
       setProfile(data);
     } catch (error) {
       console.error("Error in getProfile:", error);
     }
   };
 
+  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      if (!event.target.files || event.target.files.length === 0) {
+        return;
+      }
+
+      const file = event.target.files[0];
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${session.user.id}/${Math.random()}.${fileExt}`;
+
+      setUploading(true);
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ avatar_url: publicUrl })
+        .eq('id', session.user.id);
+
+      if (updateError) {
+        throw updateError;
+      }
+
+      await getProfile(session.user.id);
+      toast({
+        title: "Success",
+        description: "Avatar updated successfully",
+      });
+    } catch (error) {
+      console.error("Error uploading avatar:", error);
+      toast({
+        title: "Error",
+        description: "Failed to upload avatar",
+        variant: "destructive",
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSignIn = async () => {
     try {
-      console.log("Starting Google sign in...");
-      
-      // Log the current URL and port
       const currentUrl = window.location.origin;
-      const currentPort = window.location.port;
-      console.log("Current URL:", currentUrl);
-      console.log("Current Port:", currentPort);
-      
-      // Log Supabase configuration
-      console.log("Supabase config:", {
-        url: process.env.SUPABASE_URL || 'https://cnvaqtbcdssgdlyjhdyf.supabase.co'
-      });
       
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -88,8 +126,6 @@ export const ProfileStats = () => {
           }
         }
       });
-
-      console.log("Sign in response:", { data, error });
 
       if (error) {
         console.error("Sign in error:", error);
@@ -131,6 +167,14 @@ export const ProfileStats = () => {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
   return (
     <HoverCard open={isMobile ? isOpen : undefined}>
       <HoverCardTrigger asChild>
@@ -138,16 +182,49 @@ export const ProfileStats = () => {
           className="flex items-center justify-center w-8 h-8 rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
           onClick={() => isMobile && setIsOpen(!isOpen)}
         >
-          <UserRound className="w-4 h-4" />
+          {profile?.avatar_url ? (
+            <Avatar className="w-8 h-8">
+              <AvatarImage src={profile.avatar_url} alt="Profile" />
+              <AvatarFallback><UserRound className="w-4 h-4" /></AvatarFallback>
+            </Avatar>
+          ) : (
+            <UserRound className="w-4 h-4" />
+          )}
         </button>
       </HoverCardTrigger>
-      <HoverCardContent className="w-64">
-        <div className="space-y-2">
-          <h4 className="text-sm font-semibold">Your Stats</h4>
+      <HoverCardContent className="w-80">
+        <div className="space-y-4">
+          <h4 className="text-sm font-semibold">Your Profile</h4>
           {session ? (
             <div className="space-y-4">
-              <div className="text-sm">
+              <div className="flex items-center gap-4">
+                <Avatar className="w-16 h-16">
+                  <AvatarImage src={profile?.avatar_url} alt="Profile" />
+                  <AvatarFallback><UserRound className="w-8 h-8" /></AvatarFallback>
+                </Avatar>
+                <div>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="relative"
+                    disabled={uploading}
+                  >
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      onChange={handleAvatarUpload}
+                      disabled={uploading}
+                    />
+                    <Upload className="w-4 h-4 mr-2" />
+                    {uploading ? 'Uploading...' : 'Upload Avatar'}
+                  </Button>
+                </div>
+              </div>
+              <div className="space-y-2 text-sm">
+                <p className="text-muted-foreground">Member since: {profile?.joined_at ? formatDate(profile.joined_at) : 'Loading...'}</p>
                 <p className="text-muted-foreground">Current Streak: {profile?.streak || 0} days</p>
+                <p className="text-muted-foreground">Last Played: {profile?.last_played ? formatDate(profile.last_played) : 'Never'}</p>
               </div>
               <Button 
                 variant="outline" 
@@ -159,7 +236,7 @@ export const ProfileStats = () => {
             </div>
           ) : (
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Sign in to track your streak</p>
+              <p className="text-sm text-muted-foreground">Sign in to track your stats</p>
               <Button 
                 variant="outline" 
                 className="w-full"

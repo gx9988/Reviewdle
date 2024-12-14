@@ -11,20 +11,26 @@ export type Database = {
     Tables: {
       profiles: {
         Row: {
+          avatar_url: string | null
           created_at: string
           id: string
+          joined_at: string
           last_played: string | null
           streak: number | null
         }
         Insert: {
+          avatar_url?: string | null
           created_at?: string
           id: string
+          joined_at?: string
           last_played?: string | null
           streak?: number | null
         }
         Update: {
+          avatar_url?: string | null
           created_at?: string
           id?: string
+          joined_at?: string
           last_played?: string | null
           streak?: number | null
         }
