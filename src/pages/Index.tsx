@@ -24,6 +24,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="h-[40vh] sm:h-[50vh] relative overflow-hidden">
+        <div className="absolute top-2 left-4 text-xs text-white/70 z-10 font-serif">est.2023</div>
         <img 
           src="/lovable-uploads/b951058c-38ab-4b10-8d47-13e9ce6642a9.png"
           alt="Reviewdle Banner"
