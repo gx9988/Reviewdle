@@ -4,14 +4,21 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const ProfileStats = () => {
   const streak = parseInt(localStorage.getItem('streak') || '0');
+  const [isOpen, setIsOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   return (
-    <HoverCard>
+    <HoverCard open={isMobile ? isOpen : undefined}>
       <HoverCardTrigger asChild>
-        <button className="flex items-center justify-center w-8 h-8 rounded-full bg-secondary hover:bg-secondary/80 transition-colors">
+        <button 
+          className="flex items-center justify-center w-8 h-8 rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
+          onClick={() => isMobile && setIsOpen(!isOpen)}
+        >
           <UserRound className="w-4 h-4" />
         </button>
       </HoverCardTrigger>
