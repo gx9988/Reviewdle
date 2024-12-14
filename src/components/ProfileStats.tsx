@@ -30,19 +30,17 @@ export const ProfileStats = () => {
   return (
     <HoverCard 
       open={isMobile ? isOpen : undefined}
-      onOpenChange={(open) => {
-        if (isMobile && !open) {
-          setIsOpen(false);
-        }
-      }}
+      onOpenChange={setIsOpen}
     >
       <HoverCardTrigger asChild>
-        <ProfileButton 
-          avatarUrl={profile?.avatar_url}
-          onClick={handleProfileClick}
-        />
+        <div>
+          <ProfileButton 
+            avatarUrl={profile?.avatar_url}
+            onClick={handleProfileClick}
+          />
+        </div>
       </HoverCardTrigger>
-      <HoverCardContent className="w-80">
+      <HoverCardContent className="w-80" align="end">
         <div className="space-y-4">
           <h4 className="text-sm font-semibold">Your Profile</h4>
           {session ? (

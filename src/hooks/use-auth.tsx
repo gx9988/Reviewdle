@@ -26,23 +26,24 @@ export const useAuth = () => {
     }
   };
 
-  const updateProfileAvatar = (url: string) => {
+  const updateProfileAvatar = async (url: string) => {
     if (!session?.user?.id) return;
     
-    return supabase
-      .from('profiles')
-      .update({ avatar_url: url })
-      .eq('id', session.user.id)
-      .then(({ error }) => {
-        if (error) {
-          console.error("Error updating profile avatar:", error);
-          return;
-        }
-        setProfile(prev => ({ ...prev, avatar_url: url }));
-      })
-      .catch((error) => {
-        console.error("Error in updateProfileAvatar:", error);
-      });
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ avatar_url: url })
+        .eq('id', session.user.id);
+
+      if (error) {
+        console.error("Error updating profile avatar:", error);
+        return;
+      }
+      
+      setProfile(prev => ({ ...prev, avatar_url: url }));
+    } catch (error) {
+      console.error("Error in updateProfileAvatar:", error);
+    }
   };
 
   useEffect(() => {
