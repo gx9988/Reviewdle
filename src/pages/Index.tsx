@@ -210,6 +210,7 @@ const Index = () => {
           <MovieResult
             movie={movieLibrary[0]}
             handleShare={handleShare}
+            isWin={gameWon}
           />
         )}
       </div>

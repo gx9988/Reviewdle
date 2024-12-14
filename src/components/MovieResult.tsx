@@ -9,13 +9,21 @@ interface MovieResultProps {
     rating: string;
   };
   handleShare: () => void;
+  isWin?: boolean;
 }
 
-export const MovieResult = ({ movie, handleShare }: MovieResultProps) => {
+export const MovieResult = ({ movie, handleShare, isWin }: MovieResultProps) => {
   return (
     <div className="mt-6 sm:mt-8 bg-card p-4 sm:p-6 rounded-lg shadow-lg animate-fade-in">
+      {isWin && (
+        <div className="mb-4 text-center animate-fade-in">
+          <p className="text-lg text-green-400 font-semibold">
+            🎉 Congratulations! You've guessed it correctly! 🎉
+          </p>
+        </div>
+      )}
       <div className="text-center">
-        <h2 className="text-xl sm:text-2xl font-bold mb-2">
+        <h2 className={`text-xl sm:text-2xl font-bold mb-2 ${isWin ? 'text-green-400' : ''}`}>
           🎬 {movie.title} ({movie.year})
         </h2>
         <p className="text-muted-foreground mb-4">
