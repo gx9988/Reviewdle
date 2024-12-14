@@ -90,7 +90,11 @@ const Index = () => {
       return;
     }
 
-    if (guess.toLowerCase() === movieLibrary[0].title.toLowerCase()) {
+    // Normalize both strings by trimming whitespace and converting to lowercase
+    const normalizedGuess = guess.trim().toLowerCase();
+    const normalizedTitle = movieLibrary[0].title.trim().toLowerCase();
+
+    if (normalizedGuess === normalizedTitle) {
       setGameWon(true);
       const streak = parseInt(localStorage.getItem('streak') || '0') + 1;
       localStorage.setItem('streak', streak.toString());
