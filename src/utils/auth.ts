@@ -52,7 +52,7 @@ export const signOut = async () => {
       return { error };
     }
 
-    // Clear any local state
+    // Force a reload to clear all state
     window.location.reload();
     
     return { error: null };
