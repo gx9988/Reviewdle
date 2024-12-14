@@ -13,9 +13,19 @@ export const useGameState = (maxAttempts: number) => {
 
   const getESTDate = () => {
     const now = new Date();
-    const estOffset = -5;
-    const estDate = new Date(now.getTime() + estOffset * 60 * 60 * 1000);
-    return estDate.toISOString().split('T')[0];
+    const estOffset = -5; // EST is UTC-5
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const est = new Date(utc + (3600000 * estOffset));
+    return est.toISOString().split('T')[0];
+  };
+
+  const isYesterday = (dateStr: string) => {
+    const today = new Date(getESTDate());
+    const date = new Date(dateStr);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    return date.toISOString().split('T')[0] === yesterday.toISOString().split('T')[0];
   };
 
   const initializeGame = () => {
@@ -49,7 +59,6 @@ export const useGameState = (maxAttempts: number) => {
     try {
       const currentDate = getESTDate();
       
-      // First, get the current profile data
       const { data: profile, error: fetchError } = await supabase
         .from('profiles')
         .select('*')
@@ -58,21 +67,22 @@ export const useGameState = (maxAttempts: number) => {
 
       if (fetchError) throw fetchError;
 
-      // Calculate new streak based on last played date
-      let newStreak = 1; // Default to 1 for first win
+      let newStreak = 1; // Default for first win
       
-      if (profile?.last_played) {
-        const lastPlayed = new Date(profile.last_played);
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        
+      if (profile?.last_played && isYesterday(profile.last_played)) {
         // If last played was yesterday, increment streak
-        if (lastPlayed.toISOString().split('T')[0] === yesterday.toISOString().split('T')[0]) {
-          newStreak = (profile.streak || 0) + 1;
-        }
+        newStreak = (profile.streak || 0) + 1;
+        console.log('Incrementing streak from', profile.streak, 'to', newStreak);
+      } else if (profile?.last_played && profile.last_played !== currentDate) {
+        // If last played was not yesterday (and not today), reset streak to 1
+        newStreak = 1;
+        console.log('Resetting streak to 1 (last played:', profile.last_played, ')');
+      } else if (profile?.last_played === currentDate) {
+        // If already played today, keep current streak
+        newStreak = profile.streak || 1;
+        console.log('Keeping current streak of', newStreak);
       }
 
-      // Update the profile with new streak and last played date
       const { error: updateError } = await supabase
         .from('profiles')
         .update({
@@ -83,10 +93,9 @@ export const useGameState = (maxAttempts: number) => {
 
       if (updateError) throw updateError;
 
-      // Show success toast
       toast({
         title: "Streak Updated!",
-        description: `Your current streak is ${newStreak} days!`,
+        description: `Your current streak is ${newStreak} day${newStreak === 1 ? '' : 's'}!`,
       });
 
     } catch (error) {
