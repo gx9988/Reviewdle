@@ -135,67 +135,67 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="h-[50vh] relative overflow-hidden">
+      <div className="h-[40vh] sm:h-[50vh] relative overflow-hidden">
         <img 
           src="/lovable-uploads/b951058c-38ab-4b10-8d47-13e9ce6642a9.png"
           alt="Reviewdle Banner"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background" />
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-8 -mt-20 relative z-10">
-        <h1 className="text-4xl font-bold mb-2 text-center">Reviewdle</h1>
-        <p className="text-muted-foreground text-center mb-8">
+      <div className="max-w-4xl mx-auto px-4 py-8 -mt-16 sm:-mt-20 relative z-10">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-2 text-center">Reviewdle</h1>
+        <p className="text-muted-foreground text-center mb-6 sm:mb-8">
           {new Date().toLocaleDateString()}
         </p>
 
-        <div className="bg-card p-6 rounded-lg shadow-lg mb-8">
-          <p className="text-xl mb-4">
+        <div className="bg-card p-4 sm:p-6 rounded-lg shadow-lg mb-6 sm:mb-8">
+          <p className="text-lg sm:text-xl mb-3 sm:mb-4">
             <strong>{attempts === maxAttempts ? "Final Hint:" : "Review:"}</strong>
           </p>
-          <p className="text-lg text-card-foreground">
+          <p className="text-base sm:text-lg text-card-foreground">
             {movieLibrary[0].reviews[attempts - 1]}
           </p>
         </div>
 
         {!gameWon && !gameLost && (
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center gap-3 sm:gap-4">
             <input
               type="text"
               value={guess}
               onChange={(e) => setGuess(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && makeGuess()}
               placeholder="Enter your guess here"
-              className="w-full max-w-md px-4 py-2 rounded bg-input text-foreground border border-border"
+              className="w-full max-w-md px-3 sm:px-4 py-2 rounded bg-input text-foreground border border-border"
             />
             <button
               onClick={makeGuess}
-              className="px-8 py-2 bg-primary text-primary-foreground rounded hover:opacity-90 transition-opacity"
+              className="px-6 sm:px-8 py-2 bg-primary text-primary-foreground rounded hover:opacity-90 transition-opacity"
             >
               Guess
             </button>
           </div>
         )}
 
-        <div className="text-center mt-8">
-          <p className="text-xl font-semibold">
+        <div className="text-center mt-6 sm:mt-8">
+          <p className="text-lg sm:text-xl font-semibold">
             Attempt: {attempts} / {maxAttempts}
           </p>
-          <p className="text-lg mt-2">
+          <p className="text-base sm:text-lg mt-2">
             Streak: {parseInt(localStorage.getItem('streak') || '0')} Days
           </p>
         </div>
 
         {(gameWon || gameLost) && (
-          <div className="mt-8 bg-card p-6 rounded-lg shadow-lg animate-fade-in">
-            <h2 className="text-2xl font-bold mb-2">
+          <div className="mt-6 sm:mt-8 bg-card p-4 sm:p-6 rounded-lg shadow-lg animate-fade-in">
+            <h2 className="text-xl sm:text-2xl font-bold mb-2">
               🎬 {movieLibrary[0].title} ({movieLibrary[0].year})
             </h2>
             <p className="text-muted-foreground mb-4">
               Starring: {movieLibrary[0].starring}
             </p>
-            <div className="bg-background/50 p-4 rounded">
+            <div className="bg-background/50 p-3 sm:p-4 rounded">
               <p className="mb-2">{movieLibrary[0].reviewByGod}</p>
               <p className="text-right text-yellow-500 font-bold">
                 {movieLibrary[0].rating}
@@ -203,7 +203,7 @@ const Index = () => {
             </div>
             <button
               onClick={handleShare}
-              className="mt-4 px-6 py-2 bg-secondary text-secondary-foreground rounded hover:opacity-90 transition-opacity"
+              className="mt-4 px-5 sm:px-6 py-2 bg-secondary text-secondary-foreground rounded hover:opacity-90 transition-opacity"
             >
               Share
             </button>
