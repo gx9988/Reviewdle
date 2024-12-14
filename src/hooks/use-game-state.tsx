@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { useEstDate } from "./use-est-date";
+import { useStreak } from "./use-streak";
 
 export const useGameState = (maxAttempts: number) => {
   const [attempts, setAttempts] = useState(1);
@@ -11,22 +13,8 @@ export const useGameState = (maxAttempts: number) => {
   const [wrongGuessMessage, setWrongGuessMessage] = useState<string>("");
   const [session, setSession] = useState<any>(null);
 
-  const getESTDate = () => {
-    const now = new Date();
-    const estOffset = -5; // EST is UTC-5
-    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-    const est = new Date(utc + (3600000 * estOffset));
-    return est.toISOString().split('T')[0];
-  };
-
-  const isYesterday = (dateStr: string) => {
-    const today = new Date(getESTDate());
-    const date = new Date(dateStr);
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    
-    return date.toISOString().split('T')[0] === yesterday.toISOString().split('T')[0];
-  };
+  const { getESTDate } = useEstDate();
+  const { updateStreak, resetStreakOnLoss } = useStreak();
 
   const initializeGame = () => {
     const currentDate = getESTDate();
@@ -51,85 +39,6 @@ export const useGameState = (maxAttempts: number) => {
     setGameWon(gameState.gameWon);
     setGameLost(gameState.gameLost);
     setAttempts(gameState.attempts);
-  };
-
-  const updateStreak = async () => {
-    if (!session?.user?.id) return;
-
-    try {
-      const currentDate = getESTDate();
-      
-      const { data: profile, error: fetchError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', session.user.id)
-        .single();
-
-      if (fetchError) throw fetchError;
-
-      let newStreak = 1; // Default for first win
-      
-      if (profile?.last_played && isYesterday(profile.last_played)) {
-        // If last played was yesterday, increment streak
-        newStreak = (profile.streak || 0) + 1;
-        console.log('Incrementing streak from', profile.streak, 'to', newStreak);
-      } else if (profile?.last_played && profile.last_played !== currentDate) {
-        // If last played was not yesterday (and not today), reset streak to 1
-        newStreak = 1;
-        console.log('Resetting streak to 1 (last played:', profile.last_played, ')');
-      } else if (profile?.last_played === currentDate) {
-        // If already played today, keep current streak
-        newStreak = profile.streak || 1;
-        console.log('Keeping current streak of', newStreak);
-      }
-
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .update({
-          streak: newStreak,
-          last_played: currentDate
-        })
-        .eq('id', session.user.id);
-
-      if (updateError) throw updateError;
-
-      toast({
-        title: "Streak Updated!",
-        description: `Your current streak is ${newStreak} day${newStreak === 1 ? '' : 's'}!`,
-      });
-
-    } catch (error) {
-      console.error('Error updating streak:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update streak. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const resetStreakOnLoss = async () => {
-    if (!session?.user?.id) return;
-
-    try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          streak: 0,
-          last_played: getESTDate()
-        })
-        .eq('id', session.user.id);
-
-      if (error) throw error;
-
-    } catch (error) {
-      console.error('Error resetting streak:', error);
-      toast({
-        title: "Error",
-        description: "Failed to reset streak. Please try again.",
-        variant: "destructive",
-      });
-    }
   };
 
   const saveGameState = () => {
@@ -171,8 +80,8 @@ export const useGameState = (maxAttempts: number) => {
     wrongGuessMessage,
     setWrongGuessMessage,
     session,
-    updateStreak,
-    resetStreakOnLoss,
+    updateStreak: () => session?.user?.id ? updateStreak(session.user.id) : Promise.resolve(),
+    resetStreakOnLoss: () => session?.user?.id ? resetStreakOnLoss(session.user.id) : Promise.resolve(),
     saveGameState,
     getESTDate
   };
