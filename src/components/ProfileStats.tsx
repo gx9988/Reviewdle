@@ -66,8 +66,15 @@ export const ProfileStats = () => {
   const handleSignIn = async () => {
     try {
       console.log("Starting Google sign in...");
+      
+      // Log the current URL and port
       const currentUrl = window.location.origin;
+      const currentPort = window.location.port;
       console.log("Current URL:", currentUrl);
+      console.log("Current Port:", currentPort);
+      
+      // Log Supabase configuration
+      console.log("Supabase URL:", supabase.supabaseUrl);
       
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
