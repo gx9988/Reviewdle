@@ -124,11 +124,6 @@ const Index = () => {
         setAttempts(prev => prev + 1);
         const uniqueMessage = generateUniqueMessage(Date.now(), attempts);
         setWrongGuessMessage(uniqueMessage);
-        toast({
-          title: "Wrong Guess",
-          description: uniqueMessage,
-          variant: "destructive",
-        });
       }
     }
     setGuess("");
