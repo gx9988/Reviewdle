@@ -95,26 +95,27 @@ export const ProfileStats = () => {
     setIsOpen(false);
   };
 
-  const handleOutsideClick = () => {
-    if (isMobile && isOpen) {
-      setIsOpen(false);
+  const handleProfileClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isMobile) {
+      setIsOpen(!isOpen);
     }
   };
 
   return (
     <HoverCard 
       open={isMobile ? isOpen : undefined}
-      onOpenChange={handleOutsideClick}
+      onOpenChange={(open) => {
+        if (isMobile && !open) {
+          setIsOpen(false);
+        }
+      }}
     >
       <HoverCardTrigger asChild>
         <ProfileButton 
           avatarUrl={profile?.avatar_url}
-          onClick={(e: React.MouseEvent) => {
-            if (isMobile) {
-              e.stopPropagation();
-              setIsOpen(!isOpen);
-            }
-          }}
+          onClick={handleProfileClick}
         />
       </HoverCardTrigger>
       <HoverCardContent className="w-80">

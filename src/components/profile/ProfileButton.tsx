@@ -11,6 +11,7 @@ export const ProfileButton = ({ avatarUrl, onClick }: ProfileButtonProps) => {
     <button 
       className="flex items-center justify-center w-8 h-8 rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
       onClick={onClick}
+      type="button"
     >
       {avatarUrl ? (
         <Avatar className="w-8 h-8">
