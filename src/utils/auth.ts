@@ -3,10 +3,14 @@ import { toast } from "@/hooks/use-toast";
 
 export const signInWithGoogle = async () => {
   try {
+    // Get the current URL without any path or query parameters
+    const baseUrl = window.location.origin;
+    console.log("Redirect URL:", baseUrl); // This will help us debug
+
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: window.location.origin,
+        redirectTo: baseUrl,
         queryParams: {
           access_type: 'offline',
           prompt: 'consent',
