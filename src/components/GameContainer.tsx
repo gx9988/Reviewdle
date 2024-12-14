@@ -108,11 +108,6 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
       if (attempts + 1 > maxAttempts) {
         setGameLost(true);
         localStorage.setItem('streak', '0');
-        toast({
-          title: "Game Over",
-          description: "Even my grandma who doesn't watch movies could have guessed this one!",
-          variant: "destructive",
-        });
         saveGameState();
       } else {
         setAttempts(prev => prev + 1);
@@ -125,11 +120,6 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
 
   const handleReveal = () => {
     setShowMovie(true);
-    toast({
-      title: "Movie Revealed",
-      description: "Better luck next time!",
-      variant: "default",
-    });
   };
 
   return (
