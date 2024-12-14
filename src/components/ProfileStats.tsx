@@ -1,4 +1,4 @@
-import { UserRound, Upload } from "lucide-react";
+import { UserRound } from "lucide-react";
 import {
   HoverCard,
   HoverCardContent,
@@ -8,27 +8,32 @@ import { useState, useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "./ui/button";
-import { toast } from "@/hooks/use-toast";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
+import { signInWithGoogle, signOut } from "@/utils/auth";
+import { AvatarUpload } from "./AvatarUpload";
+import { UserStats } from "./UserStats";
 
 export const ProfileStats = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [session, setSession] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
-  const [uploading, setUploading] = useState(false);
   const isMobile = useIsMobile();
 
   useEffect(() => {
+    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log("Initial session:", session);
       setSession(session);
       if (session?.user?.id) {
         getProfile(session.user.id);
       }
     });
 
+    // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("Auth state changed:", _event, session);
       setSession(session);
       if (session?.user?.id) {
         getProfile(session.user.id);
@@ -40,6 +45,7 @@ export const ProfileStats = () => {
 
   const getProfile = async (userId: string) => {
     try {
+      console.log("Fetching profile for user:", userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -48,131 +54,18 @@ export const ProfileStats = () => {
       
       if (error) {
         console.error("Error fetching profile:", error);
-        toast({
-          title: "Error",
-          description: "Failed to fetch profile data",
-          variant: "destructive",
-        });
         return;
       }
 
+      console.log("Profile data:", data);
       setProfile(data);
     } catch (error) {
       console.error("Error in getProfile:", error);
     }
   };
 
-  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    try {
-      if (!event.target.files || event.target.files.length === 0) {
-        return;
-      }
-
-      const file = event.target.files[0];
-      const fileExt = file.name.split('.').pop();
-      const filePath = `${session.user.id}/${Math.random()}.${fileExt}`;
-
-      setUploading(true);
-
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, file);
-
-      if (uploadError) {
-        throw uploadError;
-      }
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
-
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .update({ avatar_url: publicUrl })
-        .eq('id', session.user.id);
-
-      if (updateError) {
-        throw updateError;
-      }
-
-      await getProfile(session.user.id);
-      toast({
-        title: "Success",
-        description: "Avatar updated successfully",
-      });
-    } catch (error) {
-      console.error("Error uploading avatar:", error);
-      toast({
-        title: "Error",
-        description: "Failed to upload avatar",
-        variant: "destructive",
-      });
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const handleSignIn = async () => {
-    try {
-      const currentUrl = window.location.origin;
-      
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: currentUrl,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          }
-        }
-      });
-
-      if (error) {
-        console.error("Sign in error:", error);
-        toast({
-          title: "Sign In Failed",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error("Error in handleSignIn:", error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred during sign in",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleSignOut = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error("Sign out error:", error);
-        toast({
-          title: "Sign Out Failed",
-          description: error.message,
-          variant: "destructive",
-        });
-        return;
-      }
-      setProfile(null);
-      toast({
-        title: "Signed Out",
-        description: "You have been successfully signed out",
-      });
-    } catch (error) {
-      console.error("Error in handleSignOut:", error);
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+  const handleAvatarUpdate = (url: string) => {
+    setProfile(prev => ({ ...prev, avatar_url: url }));
   };
 
   return (
@@ -197,39 +90,20 @@ export const ProfileStats = () => {
           <h4 className="text-sm font-semibold">Your Profile</h4>
           {session ? (
             <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <Avatar className="w-16 h-16">
-                  <AvatarImage src={profile?.avatar_url} alt="Profile" />
-                  <AvatarFallback><UserRound className="w-8 h-8" /></AvatarFallback>
-                </Avatar>
-                <div>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="relative"
-                    disabled={uploading}
-                  >
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      onChange={handleAvatarUpload}
-                      disabled={uploading}
-                    />
-                    <Upload className="w-4 h-4 mr-2" />
-                    {uploading ? 'Uploading...' : 'Upload Avatar'}
-                  </Button>
-                </div>
-              </div>
-              <div className="space-y-2 text-sm">
-                <p className="text-muted-foreground">Member since: {profile?.joined_at ? formatDate(profile.joined_at) : 'Loading...'}</p>
-                <p className="text-muted-foreground">Current Streak: {profile?.streak || 0} days</p>
-                <p className="text-muted-foreground">Last Played: {profile?.last_played ? formatDate(profile.last_played) : 'Never'}</p>
-              </div>
+              <AvatarUpload 
+                userId={session.user.id}
+                avatarUrl={profile?.avatar_url}
+                onAvatarUpdate={handleAvatarUpdate}
+              />
+              <UserStats 
+                joinedAt={profile?.joined_at}
+                streak={profile?.streak}
+                lastPlayed={profile?.last_played}
+              />
               <Button 
                 variant="outline" 
                 className="w-full"
-                onClick={handleSignOut}
+                onClick={signOut}
               >
                 Sign Out
               </Button>
@@ -240,7 +114,7 @@ export const ProfileStats = () => {
               <Button 
                 variant="outline" 
                 className="w-full"
-                onClick={handleSignIn}
+                onClick={signInWithGoogle}
               >
                 Sign in with Google
               </Button>
