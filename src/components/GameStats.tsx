@@ -11,9 +11,6 @@ export const GameStats = ({ attempts, maxAttempts }: GameStatsProps) => {
       <p className="text-lg sm:text-xl font-semibold">
         Attempt: {attempts} / {maxAttempts}
       </p>
-      <p className="text-base sm:text-lg mt-2">
-        Streak: {parseInt(localStorage.getItem('streak') || '0')} Days
-      </p>
     </div>
   );
 };
