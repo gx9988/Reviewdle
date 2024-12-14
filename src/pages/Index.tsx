@@ -167,13 +167,12 @@ const Index = () => {
       <div className="max-w-4xl mx-auto px-4 py-8 -mt-16 sm:-mt-20 relative z-10">
         <div className="flex items-center justify-center gap-2 mb-2">
           <h1 className="text-3xl sm:text-4xl font-bold">Reviewdle</h1>
-          <span className="text-muted-foreground text-lg sm:text-xl">#00001</span>
           <ProfileStats />
           <HowToPlay />
         </div>
 
         <p className="text-muted-foreground text-center mb-6 sm:mb-8">
-          {new Date().toLocaleDateString()}
+          {new Date().toLocaleDateString()} - <span className="text-muted-foreground">#00001</span>
         </p>
 
         <MovieReview 
