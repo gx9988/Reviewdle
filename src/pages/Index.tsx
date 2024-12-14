@@ -28,6 +28,7 @@ const Index = () => {
   const [gameWon, setGameWon] = useState(false);
   const [gameLost, setGameLost] = useState(false);
   const [guess, setGuess] = useState("");
+  const [showMovie, setShowMovie] = useState(false);
   const maxAttempts = 5;
 
   useEffect(() => {
@@ -91,12 +92,12 @@ const Index = () => {
       return;
     }
 
-    // Normalize both strings by trimming whitespace and converting to lowercase
     const normalizedGuess = guess.trim().toLowerCase();
     const normalizedTitle = movieLibrary[0].title.trim().toLowerCase();
 
     if (normalizedGuess === normalizedTitle) {
       setGameWon(true);
+      setShowMovie(true);
       const streak = parseInt(localStorage.getItem('streak') || '0') + 1;
       localStorage.setItem('streak', streak.toString());
       toast({
@@ -125,6 +126,15 @@ const Index = () => {
       }
     }
     setGuess("");
+  };
+
+  const handleReveal = () => {
+    setShowMovie(true);
+    toast({
+      title: "Movie Revealed",
+      description: "Better luck next time!",
+      variant: "default",
+    });
   };
 
   const handleShare = () => {
@@ -182,7 +192,18 @@ const Index = () => {
           maxAttempts={maxAttempts}
         />
 
-        {(gameWon || gameLost) && (
+        {gameLost && !showMovie && (
+          <div className="flex justify-center mt-6">
+            <button
+              onClick={handleReveal}
+              className="px-6 sm:px-8 py-2 bg-secondary text-secondary-foreground rounded hover:opacity-90 transition-opacity"
+            >
+              Reveal Movie
+            </button>
+          </div>
+        )}
+
+        {(gameWon || (gameLost && showMovie)) && (
           <MovieResult
             movie={movieLibrary[0]}
             handleShare={handleShare}
