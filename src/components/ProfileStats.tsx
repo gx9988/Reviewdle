@@ -9,14 +9,30 @@ import { GoogleSignIn } from "./auth/GoogleSignIn";
 import { ProfileButton } from "./profile/ProfileButton";
 import { ProfileContent } from "./profile/ProfileContent";
 import { useAuth } from "@/hooks/use-auth";
+import { signOut } from "@/utils/auth";
+import { toast } from "@/hooks/use-toast";
 
 export const ProfileStats = () => {
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useIsMobile();
   const { session, profile, updateProfileAvatar } = useAuth();
 
-  const handleSignOut = () => {
-    setIsOpen(false);
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      setIsOpen(false);
+      toast({
+        title: "Success",
+        description: "Signed out successfully",
+      });
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast({
+        title: "Error",
+        description: "Failed to sign out",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleProfileClick = (e: React.MouseEvent) => {
