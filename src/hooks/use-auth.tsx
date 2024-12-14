@@ -67,6 +67,7 @@ export const useAuth = () => {
       setSession(session);
       if (session?.user?.id) {
         getProfile(session.user.id);
+        // Get avatar URL from Google auth metadata
         const avatarUrl = session.user.user_metadata?.picture || session.user.user_metadata?.avatar_url;
         console.log("Avatar URL from metadata:", avatarUrl);
         if (avatarUrl) {
@@ -82,6 +83,7 @@ export const useAuth = () => {
       setSession(session);
       if (session?.user?.id) {
         await getProfile(session.user.id);
+        // Get avatar URL from Google auth metadata on auth change
         const avatarUrl = session.user.user_metadata?.picture || session.user.user_metadata?.avatar_url;
         console.log("Avatar URL from metadata on auth change:", avatarUrl);
         if (avatarUrl) {
