@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "./ui/button";
+import { toast } from "@/hooks/use-toast";
 
 export const ProfileStats = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,6 +18,7 @@ export const ProfileStats = () => {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log("Current session:", session);
       setSession(session);
       if (session?.user?.id) {
         getProfile(session.user.id);
@@ -26,6 +28,7 @@ export const ProfileStats = () => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("Auth state changed:", _event, session);
       setSession(session);
       if (session?.user?.id) {
         getProfile(session.user.id);
@@ -36,26 +39,77 @@ export const ProfileStats = () => {
   }, []);
 
   const getProfile = async (userId: string) => {
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
-    setProfile(data);
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+      
+      if (error) {
+        console.error("Error fetching profile:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch profile data",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      console.log("Profile data:", data);
+      setProfile(data);
+    } catch (error) {
+      console.error("Error in getProfile:", error);
+    }
   };
 
   const handleSignIn = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: window.location.origin
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+
+      if (error) {
+        console.error("Sign in error:", error);
+        toast({
+          title: "Sign In Failed",
+          description: error.message,
+          variant: "destructive",
+        });
       }
-    });
+    } catch (error) {
+      console.error("Error in handleSignIn:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    setProfile(null);
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error("Sign out error:", error);
+        toast({
+          title: "Sign Out Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+      setProfile(null);
+      toast({
+        title: "Signed Out",
+        description: "You have been successfully signed out",
+      });
+    } catch (error) {
+      console.error("Error in handleSignOut:", error);
+    }
   };
 
   return (
