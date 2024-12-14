@@ -23,7 +23,7 @@ const movieLibrary = [
 const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="h-[40vh] sm:h-[50vh] relative overflow-hidden">
+      <div className="h-[35vh] sm:h-[40vh] relative overflow-hidden">
         <div className="absolute top-2 left-4 text-xs text-white/70 z-10 font-serif">est.2023</div>
         <img 
           src="/lovable-uploads/b951058c-38ab-4b10-8d47-13e9ce6642a9.png"
@@ -33,7 +33,7 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background" />
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-8 -mt-16 sm:-mt-20 relative z-10">
+      <div className="max-w-4xl mx-auto px-4 py-4 sm:py-6 -mt-12 sm:-mt-16 relative z-10">
         <Header />
         <DateDisplay />
         <GameContainer movie={movieLibrary[0]} />
