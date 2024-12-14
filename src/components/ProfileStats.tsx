@@ -65,12 +65,19 @@ export const ProfileStats = () => {
 
   const handleSignIn = async () => {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      console.log("Starting Google sign in...");
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin
+          redirectTo: window.location.origin,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          }
         }
       });
+
+      console.log("Sign in response:", { data, error });
 
       if (error) {
         console.error("Sign in error:", error);
@@ -84,7 +91,7 @@ export const ProfileStats = () => {
       console.error("Error in handleSignIn:", error);
       toast({
         title: "Error",
-        description: "An unexpected error occurred",
+        description: "An unexpected error occurred during sign in",
         variant: "destructive",
       });
     }
