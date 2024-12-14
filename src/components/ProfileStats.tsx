@@ -12,6 +12,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import { signInWithGoogle, signOut } from "@/utils/auth";
 import { AvatarUpload } from "./AvatarUpload";
 import { UserStats } from "./UserStats";
+import { toast } from "@/hooks/use-toast";
 
 export const ProfileStats = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -98,8 +99,29 @@ export const ProfileStats = () => {
   };
 
   const handleSignOut = async () => {
-    await signOut();
-    setIsOpen(false);
+    try {
+      const { error } = await signOut();
+      if (error) {
+        toast({
+          title: "Error",
+          description: "Failed to sign out. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      // Clear local state
+      setSession(null);
+      setProfile(null);
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Error in handleSignOut:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred while signing out",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleOutsideClick = () => {
