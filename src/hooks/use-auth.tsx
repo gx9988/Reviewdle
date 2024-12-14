@@ -47,10 +47,6 @@ export const useAuth = () => {
       }
       
       setProfile(prev => ({ ...prev, avatar_url: url }));
-      toast({
-        title: "Success",
-        description: "Avatar updated successfully",
-      });
     } catch (error) {
       console.error("Error in updateProfileAvatar:", error);
       toast({
@@ -61,37 +57,39 @@ export const useAuth = () => {
     }
   };
 
+  const handleSession = async (session: any) => {
+    console.log("Handling session:", session);
+    setSession(session);
+    
+    if (session?.user) {
+      await getProfile(session.user.id);
+      
+      // Get avatar URL from Google auth metadata
+      const avatarUrl = session.user.user_metadata?.avatar_url || 
+                       session.user.user_metadata?.picture;
+                       
+      console.log("Avatar URL from metadata:", avatarUrl);
+      if (avatarUrl) {
+        await updateProfileAvatar(avatarUrl);
+      }
+    } else {
+      setProfile(null);
+    }
+  };
+
   useEffect(() => {
+    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       console.log("Initial session:", session);
-      setSession(session);
-      if (session?.user?.id) {
-        getProfile(session.user.id);
-        // Get avatar URL from Google auth metadata
-        const avatarUrl = session.user.user_metadata?.picture || session.user.user_metadata?.avatar_url;
-        console.log("Avatar URL from metadata:", avatarUrl);
-        if (avatarUrl) {
-          updateProfileAvatar(avatarUrl);
-        }
-      }
+      handleSession(session);
     });
 
+    // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
       console.log("Auth state changed:", _event, session);
-      setSession(session);
-      if (session?.user?.id) {
-        await getProfile(session.user.id);
-        // Get avatar URL from Google auth metadata on auth change
-        const avatarUrl = session.user.user_metadata?.picture || session.user.user_metadata?.avatar_url;
-        console.log("Avatar URL from metadata on auth change:", avatarUrl);
-        if (avatarUrl) {
-          await updateProfileAvatar(avatarUrl);
-        }
-      } else {
-        setProfile(null);
-      }
+      await handleSession(session);
     });
 
     return () => subscription.unsubscribe();
