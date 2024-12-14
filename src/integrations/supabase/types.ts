@@ -9,6 +9,42 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      movies: {
+        Row: {
+          created_at: string
+          id: number
+          rating: string
+          review_by_god: string
+          reviews: string[]
+          starring: string
+          title: string
+          used_on: string | null
+          year: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          rating: string
+          review_by_god: string
+          reviews: string[]
+          starring: string
+          title: string
+          used_on?: string | null
+          year: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          rating?: string
+          review_by_god?: string
+          reviews?: string[]
+          starring?: string
+          title?: string
+          used_on?: string | null
+          year?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -41,7 +77,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_next_movie: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          created_at: string
+          id: number
+          rating: string
+          review_by_god: string
+          reviews: string[]
+          starring: string
+          title: string
+          used_on: string | null
+          year: number
+        }
+      }
     }
     Enums: {
       [_ in never]: never

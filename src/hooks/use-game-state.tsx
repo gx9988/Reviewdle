@@ -46,43 +46,81 @@ export const useGameState = (maxAttempts: number) => {
   const updateStreak = async () => {
     if (!session?.user?.id) return;
 
-    const currentDate = getESTDate();
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', session.user.id)
-      .single();
-
-    if (profile) {
-      const lastPlayed = profile.last_played;
-      const streak = profile.streak || 0;
+    try {
+      const currentDate = getESTDate();
       
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayStr = yesterday.toISOString().split('T')[0];
-      
-      const newStreak = lastPlayed === yesterdayStr ? streak + 1 : 1;
+      // First, get the current profile data
+      const { data: profile, error: fetchError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', session.user.id)
+        .single();
 
-      await supabase
+      if (fetchError) throw fetchError;
+
+      // Calculate new streak based on last played date
+      let newStreak = 1; // Default to 1 for first win
+      
+      if (profile?.last_played) {
+        const lastPlayed = new Date(profile.last_played);
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        
+        // If last played was yesterday, increment streak
+        if (lastPlayed.toISOString().split('T')[0] === yesterday.toISOString().split('T')[0]) {
+          newStreak = (profile.streak || 0) + 1;
+        }
+      }
+
+      // Update the profile with new streak and last played date
+      const { error: updateError } = await supabase
         .from('profiles')
         .update({
           streak: newStreak,
           last_played: currentDate
         })
         .eq('id', session.user.id);
+
+      if (updateError) throw updateError;
+
+      // Show success toast
+      toast({
+        title: "Streak Updated!",
+        description: `Your current streak is ${newStreak} days!`,
+      });
+
+    } catch (error) {
+      console.error('Error updating streak:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update streak. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
   const resetStreakOnLoss = async () => {
     if (!session?.user?.id) return;
 
-    await supabase
-      .from('profiles')
-      .update({
-        streak: 0,
-        last_played: getESTDate()
-      })
-      .eq('id', session.user.id);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          streak: 0,
+          last_played: getESTDate()
+        })
+        .eq('id', session.user.id);
+
+      if (error) throw error;
+
+    } catch (error) {
+      console.error('Error resetting streak:', error);
+      toast({
+        title: "Error",
+        description: "Failed to reset streak. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const saveGameState = () => {
