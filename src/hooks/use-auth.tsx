@@ -47,10 +47,7 @@ export const useAuth = () => {
       }
       
       setProfile(prev => ({ ...prev, avatar_url: url }));
-      toast({
-        title: "Success",
-        description: "Avatar updated successfully",
-      });
+      console.log("Avatar updated successfully:", url);
     } catch (error) {
       console.error("Error in updateProfileAvatar:", error);
       toast({
@@ -69,7 +66,8 @@ export const useAuth = () => {
       await getProfile(session.user.id);
       
       // Get avatar URL from Google auth metadata
-      const avatarUrl = session.user.user_metadata?.picture;
+      const avatarUrl = session.user.user_metadata?.picture || 
+                       session.user.user_metadata?.avatar_url;
                        
       console.log("Avatar URL from metadata:", avatarUrl);
       if (avatarUrl) {
