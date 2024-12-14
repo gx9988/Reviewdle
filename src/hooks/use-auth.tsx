@@ -21,7 +21,11 @@ export const useAuth = () => {
       }
 
       console.log("Profile data:", data);
-      setProfile(data);
+      // Only update non-avatar profile data if we already have an avatar
+      setProfile(prev => ({
+        ...data,
+        avatar_url: prev?.avatar_url || data.avatar_url
+      }));
     } catch (error) {
       console.error("Error in getProfile:", error);
     }
@@ -63,20 +67,25 @@ export const useAuth = () => {
     setSession(session);
     
     if (session?.user) {
-      // Get avatar URL from Google auth metadata immediately
+      // Immediately set profile with avatar from Google metadata
       const avatarUrl = session.user.user_metadata?.picture || 
                        session.user.user_metadata?.avatar_url;
                        
       console.log("Avatar URL from metadata:", avatarUrl);
       
-      // Update profile state immediately with the avatar
       if (avatarUrl) {
-        setProfile(prev => ({ ...prev, avatar_url: avatarUrl }));
+        // Set initial profile state with just the avatar
+        setProfile(prev => ({ 
+          ...prev, 
+          id: session.user.id,
+          avatar_url: avatarUrl 
+        }));
       }
       
-      // Then fetch the full profile and update avatar in database
+      // Then fetch the full profile in the background
       await getProfile(session.user.id);
       
+      // Update avatar in database if needed
       if (avatarUrl) {
         await updateProfileAvatar(avatarUrl);
       }
