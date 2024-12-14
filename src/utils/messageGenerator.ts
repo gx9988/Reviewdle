@@ -1,35 +1,35 @@
 const adjectives = [
-  "spectacularly", "monumentally", "historically", "impressively", 
-  "remarkably", "extraordinarily", "phenomenally", "uniquely",
-  "particularly", "notably", "distinctly", "exceptionally"
+  "almost", "nearly", "getting closer", "not quite", 
+  "just about", "very close", "approaching", "moving towards",
+  "steadily", "gradually", "surely", "carefully"
 ];
 
 const actions = [
-  "missed the mark", "got it wrong", "failed to guess", "messed up",
-  "dropped the ball", "missed by a mile", "went off track", "lost the plot",
-  "went astray", "missed completely", "fumbled", "goofed up"
+  "missed it", "didn't quite get it", "weren't quite there", "were close",
+  "had a good try", "made a solid attempt", "gave it a shot", "took a guess",
+  "made an attempt", "tried your best", "gave it your all", "made progress"
 ];
 
 const comparisons = [
-  "like a fish trying to climb a tree",
-  "like using a fork to eat soup",
-  "like bringing a knife to a gunfight",
-  "like trying to teach a cat to bark",
-  "like expecting pineapple on pizza to taste good",
-  "like waiting for a response from your ex",
-  "like trying to find a needle in a haystack... blindfolded",
-  "like attempting to herd cats",
-  "like trying to catch fog with a net",
-  "like expecting silence at a rock concert",
-  "like trying to nail jelly to a wall",
-  "like counting stars during daytime"
+  "like a detective on the right track",
+  "like finding the right puzzle piece",
+  "like getting warmer in hot and cold",
+  "like solving a mystery step by step",
+  "like connecting the dots",
+  "like following the breadcrumbs",
+  "like piecing together the clues",
+  "like reading between the lines",
+  "like uncovering the story",
+  "like solving a riddle",
+  "like finding your way through a maze",
+  "like putting the pieces together"
 ];
 
 const encouragements = [
-  "but keep trying!", "but don't give up!", "but you've got this!",
-  "but there's always next time!", "but stay positive!", "but keep at it!",
-  "but we believe in you!", "but you're getting warmer!", "but you can do this!",
-  "but that's the spirit!", "but A for effort!", "but nice attempt!"
+  "you're getting closer!", "keep going!", "you can do this!",
+  "you're on the right track!", "that's the spirit!", "great effort!",
+  "you're making progress!", "almost there!", "don't give up!",
+  "getting warmer!", "keep thinking!", "trust your instincts!"
 ];
 
 export const generateUniqueMessage = (timestamp: number, attempt: number): string => {
