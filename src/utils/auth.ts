@@ -51,6 +51,10 @@ export const signOut = async () => {
       });
       return { error };
     }
+
+    // Clear any local state if needed
+    window.location.reload(); // Force a reload to clear all state
+    
     toast({
       title: "Signed Out",
       description: "You have been successfully signed out",
@@ -58,6 +62,11 @@ export const signOut = async () => {
     return { error: null };
   } catch (error) {
     console.error("Error in signOut:", error);
+    toast({
+      title: "Error",
+      description: "An unexpected error occurred during sign out",
+      variant: "destructive",
+    });
     return { error };
   }
 };
