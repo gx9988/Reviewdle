@@ -5,6 +5,7 @@ import { GuessInput } from "@/components/GuessInput";
 import { GameStats } from "@/components/GameStats";
 import { MovieResult } from "@/components/MovieResult";
 import { ProfileStats } from "@/components/ProfileStats";
+import { HowToPlay } from "@/components/HowToPlay";
 
 const movieLibrary = [
   {
@@ -168,6 +169,7 @@ const Index = () => {
           <h1 className="text-3xl sm:text-4xl font-bold">Reviewdle</h1>
           <span className="text-muted-foreground text-lg sm:text-xl">#00001</span>
           <ProfileStats />
+          <HowToPlay />
         </div>
         <p className="text-muted-foreground text-center mb-6 sm:mb-8">
           {new Date().toLocaleDateString()}
