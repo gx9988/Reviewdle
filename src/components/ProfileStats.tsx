@@ -26,22 +26,49 @@ export const ProfileStats = () => {
       setSession(session);
       if (session?.user?.id) {
         getProfile(session.user.id);
+        // If user has a Google avatar, update their profile with it
+        if (session.user.user_metadata?.avatar_url) {
+          updateProfileAvatar(session.user.id, session.user.user_metadata.avatar_url);
+        }
       }
     });
 
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       console.log("Auth state changed:", _event, session);
       setSession(session);
       if (session?.user?.id) {
-        getProfile(session.user.id);
+        await getProfile(session.user.id);
+        // If user has a Google avatar, update their profile with it
+        if (session.user.user_metadata?.avatar_url) {
+          await updateProfileAvatar(session.user.id, session.user.user_metadata.avatar_url);
+        }
       }
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const updateProfileAvatar = async (userId: string, avatarUrl: string) => {
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ avatar_url: avatarUrl })
+        .eq('id', userId);
+
+      if (error) {
+        console.error("Error updating profile avatar:", error);
+        return;
+      }
+
+      // Update local state
+      setProfile(prev => ({ ...prev, avatar_url: avatarUrl }));
+    } catch (error) {
+      console.error("Error in updateProfileAvatar:", error);
+    }
+  };
 
   const getProfile = async (userId: string) => {
     try {
