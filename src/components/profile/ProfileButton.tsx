@@ -12,6 +12,7 @@ export const ProfileButton = ({ avatarUrl, onClick }: ProfileButtonProps) => {
       className="flex items-center justify-center w-8 h-8 rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
       onClick={onClick}
       type="button"
+      aria-label="Toggle profile menu"
     >
       {avatarUrl ? (
         <Avatar className="w-8 h-8">
