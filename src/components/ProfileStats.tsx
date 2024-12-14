@@ -66,10 +66,13 @@ export const ProfileStats = () => {
   const handleSignIn = async () => {
     try {
       console.log("Starting Google sign in...");
+      const redirectURL = `${window.location.origin}`;
+      console.log("Redirect URL:", redirectURL);
+      
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo: redirectURL,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
