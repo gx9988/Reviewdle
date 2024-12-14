@@ -63,13 +63,20 @@ export const useAuth = () => {
     setSession(session);
     
     if (session?.user) {
-      await getProfile(session.user.id);
-      
-      // Get avatar URL from Google auth metadata
+      // Get avatar URL from Google auth metadata immediately
       const avatarUrl = session.user.user_metadata?.picture || 
                        session.user.user_metadata?.avatar_url;
                        
       console.log("Avatar URL from metadata:", avatarUrl);
+      
+      // Update profile state immediately with the avatar
+      if (avatarUrl) {
+        setProfile(prev => ({ ...prev, avatar_url: avatarUrl }));
+      }
+      
+      // Then fetch the full profile and update avatar in database
+      await getProfile(session.user.id);
+      
       if (avatarUrl) {
         await updateProfileAvatar(avatarUrl);
       }
