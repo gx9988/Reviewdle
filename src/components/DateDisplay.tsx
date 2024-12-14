@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useEstDate } from "@/hooks/use-est-date";
 
 export const DateDisplay = () => {
-  const [gameNumber, setGameNumber] = useState<number>(0);
+  const [gameNumber, setGameNumber] = useState<number>(1);
   const { getESTDate } = useEstDate();
 
   useEffect(() => {
@@ -21,6 +21,8 @@ export const DateDisplay = () => {
 
       if (data) {
         setGameNumber(data.id);
+      } else {
+        setGameNumber(1);
       }
     };
 
