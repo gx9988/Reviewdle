@@ -45,6 +45,8 @@ export const ProfileStats = () => {
         if (session.user.user_metadata?.avatar_url) {
           await updateProfileAvatar(session.user.id, session.user.user_metadata.avatar_url);
         }
+      } else {
+        setProfile(null);
       }
     });
 
@@ -95,6 +97,11 @@ export const ProfileStats = () => {
     setProfile(prev => ({ ...prev, avatar_url: url }));
   };
 
+  const handleSignOut = async () => {
+    await signOut();
+    setIsOpen(false);
+  };
+
   return (
     <HoverCard open={isMobile ? isOpen : undefined}>
       <HoverCardTrigger asChild>
@@ -130,7 +137,7 @@ export const ProfileStats = () => {
               <Button 
                 variant="outline" 
                 className="w-full"
-                onClick={signOut}
+                onClick={handleSignOut}
               >
                 Sign Out
               </Button>

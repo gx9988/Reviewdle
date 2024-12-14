@@ -52,13 +52,9 @@ export const signOut = async () => {
       return { error };
     }
 
-    // Clear any local state if needed
-    window.location.reload(); // Force a reload to clear all state
+    // Force a reload to clear all state
+    window.location.reload();
     
-    toast({
-      title: "Signed Out",
-      description: "You have been successfully signed out",
-    });
     return { error: null };
   } catch (error) {
     console.error("Error in signOut:", error);
