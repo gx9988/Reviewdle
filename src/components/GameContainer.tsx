@@ -4,6 +4,7 @@ import { MovieReview } from "./MovieReview";
 import { GuessInput } from "./GuessInput";
 import { MovieResult } from "./MovieResult";
 import { generateUniqueMessage } from "@/utils/messageGenerator";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Movie {
   title: string;
@@ -25,10 +26,22 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
   const [guess, setGuess] = useState("");
   const [showMovie, setShowMovie] = useState(false);
   const [wrongGuessMessage, setWrongGuessMessage] = useState<string>("");
+  const [session, setSession] = useState<any>(null);
   const maxAttempts = 5;
 
   useEffect(() => {
     initializeGame();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const getESTDate = () => {
@@ -63,6 +76,49 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
     setAttempts(gameState.attempts);
   };
 
+  const updateStreak = async () => {
+    if (!session?.user?.id) return;
+
+    const currentDate = getESTDate();
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', session.user.id)
+      .single();
+
+    if (profile) {
+      const lastPlayed = profile.last_played;
+      const streak = profile.streak || 0;
+      
+      // If last played was yesterday, increment streak
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+      
+      const newStreak = lastPlayed === yesterdayStr ? streak + 1 : 1;
+
+      await supabase
+        .from('profiles')
+        .update({
+          streak: newStreak,
+          last_played: currentDate
+        })
+        .eq('id', session.user.id);
+    }
+  };
+
+  const resetStreakOnLoss = async () => {
+    if (!session?.user?.id) return;
+
+    await supabase
+      .from('profiles')
+      .update({
+        streak: 0,
+        last_played: getESTDate()
+      })
+      .eq('id', session.user.id);
+  };
+
   const saveGameState = () => {
     const currentDate = getESTDate();
     localStorage.setItem('lastPlayedDate', currentDate);
@@ -73,7 +129,7 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
     }));
   };
 
-  const makeGuess = () => {
+  const makeGuess = async () => {
     if (!guess.trim()) return;
 
     const currentDate = getESTDate();
@@ -95,8 +151,7 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
       setGameWon(true);
       setShowMovie(true);
       setWrongGuessMessage("");
-      const streak = parseInt(localStorage.getItem('streak') || '0') + 1;
-      localStorage.setItem('streak', streak.toString());
+      await updateStreak();
       toast({
         title: "Correct!",
         description: "The Reviewdle God is impressed! Come back tomorrow for another movie!",
@@ -106,7 +161,7 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
     } else {
       if (attempts + 1 > maxAttempts) {
         setGameLost(true);
-        localStorage.setItem('streak', '0');
+        await resetStreakOnLoss();
         saveGameState();
       } else {
         setAttempts(prev => prev + 1);
