@@ -11,12 +11,26 @@ export const HowToPlay = () => {
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useIsMobile();
 
+  const handleOutsideClick = () => {
+    if (isMobile && isOpen) {
+      setIsOpen(false);
+    }
+  };
+
   return (
-    <HoverCard open={isMobile ? isOpen : undefined}>
+    <HoverCard 
+      open={isMobile ? isOpen : undefined}
+      onOpenChange={handleOutsideClick}
+    >
       <HoverCardTrigger asChild>
         <button 
           className="flex items-center justify-center w-8 h-8 rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
-          onClick={() => isMobile && setIsOpen(!isOpen)}
+          onClick={(e) => {
+            if (isMobile) {
+              e.stopPropagation();
+              setIsOpen(!isOpen);
+            }
+          }}
         >
           <HelpCircle className="w-4 h-4" />
         </button>
