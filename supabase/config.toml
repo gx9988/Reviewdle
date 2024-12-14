@@ -1,1 +1,4 @@
 project_id = "cnvaqtbcdssgdlyjhdyf"
+
+[functions.update-daily-movie]
+verify_jwt = false
