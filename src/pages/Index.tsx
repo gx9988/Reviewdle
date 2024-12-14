@@ -170,7 +170,14 @@ const Index = () => {
           <span className="text-muted-foreground text-lg sm:text-xl">#00001</span>
           <ProfileStats />
           <HowToPlay />
+          <button
+            onClick={handleShare}
+            className="ml-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-full hover:opacity-90 transition-opacity flex items-center gap-1"
+          >
+            <span>Share</span>
+          </button>
         </div>
+
         <p className="text-muted-foreground text-center mb-6 sm:mb-8">
           {new Date().toLocaleDateString()}
         </p>
@@ -209,7 +216,6 @@ const Index = () => {
         {(gameWon || (gameLost && showMovie)) && (
           <MovieResult
             movie={movieLibrary[0]}
-            handleShare={handleShare}
             isWin={gameWon}
           />
         )}

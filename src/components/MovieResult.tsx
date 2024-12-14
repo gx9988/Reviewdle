@@ -8,11 +8,10 @@ interface MovieResultProps {
     reviewByGod: string;
     rating: string;
   };
-  handleShare: () => void;
   isWin?: boolean;
 }
 
-export const MovieResult = ({ movie, handleShare, isWin }: MovieResultProps) => {
+export const MovieResult = ({ movie, isWin }: MovieResultProps) => {
   return (
     <div className="mt-6 sm:mt-8 bg-card p-4 sm:p-6 rounded-lg shadow-lg animate-fade-in">
       {isWin && (
@@ -35,14 +34,6 @@ export const MovieResult = ({ movie, handleShare, isWin }: MovieResultProps) => 
         <p className="text-right text-yellow-500 font-bold">
           {movie.rating}
         </p>
-      </div>
-      <div className="text-center mt-4">
-        <button
-          onClick={handleShare}
-          className="px-5 sm:px-6 py-2 bg-secondary text-secondary-foreground rounded hover:opacity-90 transition-opacity"
-        >
-          Share
-        </button>
       </div>
     </div>
   );
