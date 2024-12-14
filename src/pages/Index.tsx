@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/hooks/use-toast";
 import { MovieReview } from "@/components/MovieReview";
 import { GuessInput } from "@/components/GuessInput";
 import { GameStats } from "@/components/GameStats";
@@ -100,7 +100,7 @@ const Index = () => {
       localStorage.setItem('streak', streak.toString());
       toast({
         title: "Correct!",
-        description: "The Reviewdle God is impressed!",
+        description: "The Reviewdle God is impressed! Come back tomorrow for another movie!",
         variant: "default",
       });
       saveGameState();
