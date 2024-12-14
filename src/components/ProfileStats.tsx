@@ -74,7 +74,9 @@ export const ProfileStats = () => {
       console.log("Current Port:", currentPort);
       
       // Log Supabase configuration
-      console.log("Supabase URL:", supabase.supabaseUrl);
+      console.log("Supabase config:", {
+        url: process.env.SUPABASE_URL || 'https://cnvaqtbcdssgdlyjhdyf.supabase.co'
+      });
       
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
