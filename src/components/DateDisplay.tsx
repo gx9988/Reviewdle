@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useEstDate } from "@/hooks/use-est-date";
 
 export const DateDisplay = () => {
   const [gameNumber, setGameNumber] = useState<number>(0);
+  const { getESTDate } = useEstDate();
 
   useEffect(() => {
     const fetchGameNumber = async () => {
       const { data, error } = await supabase
         .from('movies')
         .select('id')
-        .eq('used_on', new Date().toISOString().split('T')[0])
-        .single();
+        .eq('used_on', getESTDate())
+        .maybeSingle();
 
       if (error) {
         console.error('Error fetching game number:', error);
