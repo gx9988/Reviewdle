@@ -170,12 +170,6 @@ const Index = () => {
           <span className="text-muted-foreground text-lg sm:text-xl">#00001</span>
           <ProfileStats />
           <HowToPlay />
-          <button
-            onClick={handleShare}
-            className="ml-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-full hover:opacity-90 transition-opacity flex items-center gap-1"
-          >
-            <span>Share</span>
-          </button>
         </div>
 
         <p className="text-muted-foreground text-center mb-6 sm:mb-8">
@@ -219,6 +213,15 @@ const Index = () => {
             isWin={gameWon}
           />
         )}
+
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={handleShare}
+            className="px-6 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors flex items-center gap-2 shadow-lg"
+          >
+            <span>Share Reviewdle</span>
+          </button>
+        </div>
       </div>
     </div>
   );
