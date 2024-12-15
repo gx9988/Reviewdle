@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { signInWithGoogle } from "@/utils/auth";
-import { Google } from "lucide-react";
+import { Mail } from "lucide-react";
 
 export const GoogleSignIn = () => {
   const handleSignIn = async () => {
@@ -15,7 +15,7 @@ export const GoogleSignIn = () => {
         className="w-full"
         onClick={handleSignIn}
       >
-        <Google className="mr-2 h-4 w-4" />
+        <Mail className="mr-2 h-4 w-4" />
         Sign in with Google
       </Button>
     </div>
