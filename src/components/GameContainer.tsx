@@ -38,7 +38,8 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
     updateStreak,
     resetStreakOnLoss,
     saveGameState,
-    getESTDate
+    getESTDate,
+    session
   } = useGameState(maxAttempts);
 
   const makeGuess = async () => {
@@ -48,9 +49,9 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
     const normalizedTitle = movie.title.trim().toLowerCase();
 
     if (normalizedGuess === normalizedTitle) {
-      handleCorrectGuess();
+      await handleCorrectGuess();
     } else {
-      handleIncorrectGuess();
+      await handleIncorrectGuess();
     }
     setGuess("");
   };
@@ -59,7 +60,11 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
     setGameWon(true);
     setShowMovie(true);
     setWrongGuessMessage("");
-    await updateStreak();
+    
+    if (session?.user?.id) {
+      await updateStreak();
+    }
+    
     toast({
       title: "Correct!",
       description: "The Reviewdle God is impressed! Come back tomorrow for another movie!",
@@ -71,7 +76,9 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
   const handleIncorrectGuess = async () => {
     if (attempts + 1 > maxAttempts) {
       setGameLost(true);
-      await resetStreakOnLoss();
+      if (session?.user?.id) {
+        await resetStreakOnLoss();
+      }
       saveGameState();
     } else {
       setAttempts(prev => prev + 1);
