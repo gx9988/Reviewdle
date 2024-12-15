@@ -8,7 +8,7 @@ interface LostGameStateProps {
 export const LostGameState = ({ onReveal }: LostGameStateProps) => {
   return (
     <div className="flex flex-col items-center gap-4 mt-6">
-      <p className="text-center text-muted-foreground">
+      <p className="text-center text-[#ff0000]">
         {generateEncouragement(Date.now())}
       </p>
       <button
