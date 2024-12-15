@@ -13,7 +13,7 @@ export const MovieReview = ({ attempt, maxAttempts, review }: MovieReviewProps) 
         <strong className="text-blue-500">
           {attempt === maxAttempts 
             ? "Final Hint:" 
-            : `Review ${attempt}:`}
+            : `Movie Review Hint ${attempt}:`}
         </strong>
       </p>
       <p className="text-base sm:text-lg text-card-foreground text-center font-serif italic">{review}</p>
