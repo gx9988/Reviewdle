@@ -39,7 +39,7 @@ export const GuessInput = ({
         </button>
       </div>
       {wrongGuessMessage && (
-        <p className="text-destructive text-sm animate-fade-in italic mt-2">
+        <p className="text-[#ff0000] text-sm animate-fade-in italic mt-2">
           {wrongGuessMessage}
         </p>
       )}
