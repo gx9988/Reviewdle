@@ -18,9 +18,9 @@ export const ShareButton = () => {
     <div className="flex justify-center mt-4 sm:mt-6">
       <button
         onClick={handleShare}
-        className="px-6 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors flex items-center gap-2 shadow-lg"
+        className="text-blue-400 hover:text-blue-500 transition-colors text-sm font-medium"
       >
-        <span>Share Reviewdle</span>
+        Share Reviewdle
       </button>
     </div>
   );
