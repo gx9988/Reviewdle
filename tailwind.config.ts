@@ -19,7 +19,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        brevis: ['Brevis', 'sans-serif'],
+        'muller': ['Muller Next', 'sans-serif'],
         serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
       },
       colors: {
