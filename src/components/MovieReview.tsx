@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 interface MovieReviewProps {
   attempt: number;
@@ -7,10 +7,12 @@ interface MovieReviewProps {
 }
 
 export const MovieReview = ({ attempt, maxAttempts, review }: MovieReviewProps) => {
-  // Generate a random star rating between 3.5 and 5 stars
-  const generateStarRating = () => {
-    return (Math.random() * 1.5 + 3.5).toFixed(1);
-  };
+  const [starRating, setStarRating] = useState<string>('');
+
+  useEffect(() => {
+    // Generate rating once when the component mounts
+    setStarRating((Math.random() * 1.5 + 3.5).toFixed(1));
+  }, []);
 
   return (
     <div className="bg-card p-3 sm:p-4 rounded-lg shadow-lg mb-4 sm:mb-6 border-2 border-accent">
@@ -23,7 +25,7 @@ export const MovieReview = ({ attempt, maxAttempts, review }: MovieReviewProps) 
       </p>
       <div className="text-base sm:text-lg text-card-foreground text-center font-serif italic">
         <p className="mt-2">"{review}"</p>
-        <span className="text-yellow-500 mt-2 block">★ {generateStarRating()} / 5.0</span>
+        <span className="text-yellow-500 mt-2 block">★ {starRating} / 5.0</span>
       </div>
     </div>
   );
