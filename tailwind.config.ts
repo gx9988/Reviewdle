@@ -19,6 +19,7 @@ export default {
     },
     extend: {
       fontFamily: {
+        calibri: ['Calibri', 'sans-serif'],
         serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
       },
       colors: {
