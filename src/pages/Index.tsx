@@ -29,8 +29,16 @@ const Index = () => {
           src="/lovable-uploads/b951058c-38ab-4b10-8d47-13e9ce6642a9.png"
           alt="Reviewdle Banner"
           className="w-full h-full object-cover object-center"
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
+          width={1920}
+          height={1080}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background" />
+        <div 
+          className="absolute inset-0 bg-gradient-to-b from-transparent to-background" 
+          aria-hidden="true"
+        />
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-4 sm:py-6 -mt-12 sm:-mt-16 relative z-10">
