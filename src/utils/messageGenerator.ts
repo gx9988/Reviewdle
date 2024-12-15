@@ -1,12 +1,12 @@
 const encouragements = [
-  "Not quite! The Reviewdle God raises an eyebrow...", 
-  "Keep guessing! The Reviewdle God believes in you!", 
-  "Hmm... The Reviewdle God expected better!", 
-  "The Reviewdle God shakes their head. Try again!", 
-  "The Reviewdle God strokes their chin thoughtfully...", 
-  "The Reviewdle God suggests thinking outside the box!", 
-  "The Reviewdle God knows you can do better!", 
-  "The Reviewdle God waits patiently for the right answer..."
+  "Not quite! Try again!", 
+  "Keep guessing!", 
+  "Hmm... getting closer!", 
+  "Almost there!", 
+  "Think outside the box!", 
+  "You can do better!", 
+  "Keep trying!", 
+  "Not the one we're looking for..."
 ];
 
 let usedMessages: Set<string> = new Set();
