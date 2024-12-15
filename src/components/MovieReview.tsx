@@ -22,8 +22,8 @@ export const MovieReview = ({ attempt, maxAttempts, review }: MovieReviewProps) 
         </strong>
       </p>
       <div className="text-base sm:text-lg text-card-foreground text-center font-serif italic">
-        <span className="text-yellow-500 mb-2 block">★ {generateStarRating()} / 5.0</span>
         <p className="mt-2">"{review}"</p>
+        <span className="text-yellow-500 mt-2 block">★ {generateStarRating()} / 5.0</span>
       </div>
     </div>
   );
