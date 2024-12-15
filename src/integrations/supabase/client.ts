@@ -12,8 +12,7 @@ export const supabase = createClient(
       storageKey: 'reviewdle-auth',
       storage: window.localStorage,
       autoRefreshToken: true,
-      detectSessionInUrl: true,
-      flowType: 'pkce'
+      detectSessionInUrl: true
     }
   }
-);
+)

@@ -38,15 +38,7 @@ export const signInWithGoogle = async () => {
 export const signOut = async () => {
   try {
     console.log("Starting sign out process...");
-    
-    // Clear any auth-related data from localStorage first
-    localStorage.removeItem('reviewdle-auth');
-    localStorage.removeItem('supabase.auth.token');
-    
-    // Sign out from Supabase with global scope
-    const { error } = await supabase.auth.signOut({
-      scope: 'global'
-    });
+    const { error } = await supabase.auth.signOut();
     
     if (error) {
       console.error("Sign out error:", error);
@@ -59,15 +51,12 @@ export const signOut = async () => {
     }
     
     console.log("Sign out successful");
-    
-    // Show success message
     toast({
       title: "Signed out successfully",
     });
     
-    // Force a complete page reload to clear all state
-    window.location.reload();
-    
+    // Force a hard refresh to clear all state
+    window.location.href = '/';
   } catch (error) {
     console.error("Error in signOut:", error);
     toast({
