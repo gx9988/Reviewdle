@@ -54,7 +54,6 @@ export const signOut = async () => {
       description: "Signed out successfully",
     });
 
-    window.location.reload();
   } catch (error) {
     console.error("Error in signOut:", error);
     toast({
