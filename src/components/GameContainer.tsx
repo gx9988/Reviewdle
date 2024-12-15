@@ -2,6 +2,7 @@ import { MovieReview } from "./MovieReview";
 import { GuessInput } from "./GuessInput";
 import { MovieResult } from "./MovieResult";
 import { generateUniqueMessage } from "@/utils/messageGenerator";
+import { generateEncouragement } from "@/utils/encouragementGenerator";
 import { useGameState } from "@/hooks/use-game-state";
 import { toast } from "@/hooks/use-toast";
 
@@ -106,7 +107,10 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
       )}
 
       {gameLost && !showMovie && (
-        <div className="flex justify-center mt-6">
+        <div className="flex flex-col items-center gap-4 mt-6">
+          <p className="text-center text-muted-foreground">
+            {generateEncouragement(Date.now())}
+          </p>
           <button
             onClick={handleReveal}
             className="px-6 sm:px-8 py-2 bg-secondary text-secondary-foreground rounded hover:opacity-90 transition-opacity"
