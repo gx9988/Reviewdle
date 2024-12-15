@@ -19,6 +19,12 @@ export const useStreak = () => {
 
       if (fetchError) throw fetchError;
 
+      // If user has already played today, don't update the streak
+      if (profile?.last_played === currentDate) {
+        console.log('Already played today, keeping current streak of', profile.streak);
+        return;
+      }
+
       let newStreak = 1; // Default for first win
       
       if (profile?.last_played && isYesterday(profile.last_played)) {
@@ -29,10 +35,6 @@ export const useStreak = () => {
         // If last played was not yesterday (and not today), reset streak to 1
         newStreak = 1;
         console.log('Resetting streak to 1 (last played:', profile.last_played, ')');
-      } else if (profile?.last_played === currentDate) {
-        // If already played today, keep current streak
-        newStreak = profile.streak || 1;
-        console.log('Keeping current streak of', newStreak);
       }
 
       const { error: updateError } = await supabase
