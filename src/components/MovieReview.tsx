@@ -7,6 +7,11 @@ interface MovieReviewProps {
 }
 
 export const MovieReview = ({ attempt, maxAttempts, review }: MovieReviewProps) => {
+  // Generate a random star rating between 3.5 and 5 stars
+  const generateStarRating = () => {
+    return (Math.random() * 1.5 + 3.5).toFixed(1);
+  };
+
   return (
     <div className="bg-card p-3 sm:p-4 rounded-lg shadow-lg mb-4 sm:mb-6 border-2 border-accent">
       <p className="text-base sm:text-lg mb-2 sm:mb-3 text-center font-serif">
@@ -16,7 +21,10 @@ export const MovieReview = ({ attempt, maxAttempts, review }: MovieReviewProps) 
             : `Movie Review Hint ${attempt}:`}
         </strong>
       </p>
-      <p className="text-base sm:text-lg text-card-foreground text-center font-serif italic">{review}</p>
+      <div className="text-base sm:text-lg text-card-foreground text-center font-serif italic">
+        <span className="text-yellow-500 mb-2 block">★ {generateStarRating()} / 5.0</span>
+        <p className="mt-2">"{review}"</p>
+      </div>
     </div>
   );
 };
