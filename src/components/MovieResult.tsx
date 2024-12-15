@@ -31,7 +31,7 @@ export const MovieResult = ({ movie, isWin }: MovieResultProps) => {
       </div>
       <div className="bg-background/50 p-3 sm:p-4 rounded">
         <p className="mb-2 text-center">{movie.reviewByGod}</p>
-        <p className="text-right text-yellow-500 font-bold">
+        <p className="text-center text-yellow-500 font-bold">
           {movie.rating}
         </p>
       </div>
