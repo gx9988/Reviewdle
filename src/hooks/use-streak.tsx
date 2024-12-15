@@ -1,9 +1,11 @@
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useEstDate } from "./use-est-date";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const useStreak = () => {
   const { getESTDate, isYesterday } = useEstDate();
+  const queryClient = useQueryClient();
 
   const updateStreak = async (userId: string) => {
     if (!userId) return;
@@ -47,6 +49,9 @@ export const useStreak = () => {
 
       if (updateError) throw updateError;
 
+      // Invalidate the profile query to trigger a refetch
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
+
       toast({
         title: "Streak Updated!",
         description: `Your current streak is ${newStreak} day${newStreak === 1 ? '' : 's'}!`,
@@ -75,6 +80,9 @@ export const useStreak = () => {
         .eq('id', userId);
 
       if (error) throw error;
+
+      // Invalidate the profile query to trigger a refetch
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
 
     } catch (error) {
       console.error('Error resetting streak:', error);
