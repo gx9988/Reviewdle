@@ -48,27 +48,42 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          average_guesses: number | null
           created_at: string
+          fastest_win: number | null
+          games_won: number | null
           id: string
           joined_at: string
           last_played: string | null
           streak: number | null
+          total_games: number | null
+          total_guesses: number | null
         }
         Insert: {
           avatar_url?: string | null
+          average_guesses?: number | null
           created_at?: string
+          fastest_win?: number | null
+          games_won?: number | null
           id: string
           joined_at?: string
           last_played?: string | null
           streak?: number | null
+          total_games?: number | null
+          total_guesses?: number | null
         }
         Update: {
           avatar_url?: string | null
+          average_guesses?: number | null
           created_at?: string
+          fastest_win?: number | null
+          games_won?: number | null
           id?: string
           joined_at?: string
           last_played?: string | null
           streak?: number | null
+          total_games?: number | null
+          total_guesses?: number | null
         }
         Relationships: []
       }

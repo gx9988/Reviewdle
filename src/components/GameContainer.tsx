@@ -6,6 +6,7 @@ import { GameStateManager } from "./GameStateManager";
 import { generateUniqueMessage } from "@/utils/messageGenerator";
 import { useGameState } from "@/hooks/use-game-state";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Movie {
   title: string;
@@ -42,6 +43,41 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
     session
   } = useGameState(maxAttempts);
 
+  const updateGameStats = async (won: boolean, attempts: number) => {
+    if (!session?.user?.id) return;
+
+    try {
+      const { data: currentStats } = await supabase
+        .from('profiles')
+        .select('total_games, games_won, total_guesses, fastest_win, average_guesses')
+        .eq('id', session.user.id)
+        .single();
+
+      if (!currentStats) return;
+
+      const updates = {
+        total_games: (currentStats.total_games || 0) + 1,
+        games_won: won ? (currentStats.games_won || 0) + 1 : (currentStats.games_won || 0),
+        total_guesses: (currentStats.total_guesses || 0) + attempts,
+        fastest_win: won ? 
+          (currentStats.fastest_win ? Math.min(currentStats.fastest_win, attempts) : attempts) : 
+          currentStats.fastest_win,
+        average_guesses: (
+          ((currentStats.total_guesses || 0) + attempts) / 
+          ((currentStats.total_games || 0) + 1)
+        ).toFixed(2)
+      };
+
+      await supabase
+        .from('profiles')
+        .update(updates)
+        .eq('id', session.user.id);
+
+    } catch (error) {
+      console.error('Error updating game stats:', error);
+    }
+  };
+
   const makeGuess = async () => {
     if (!guess.trim()) return;
 
@@ -63,6 +99,7 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
     
     if (session?.user?.id) {
       await updateStreak();
+      await updateGameStats(true, attempts);
     }
     
     toast({
@@ -74,10 +111,11 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
   };
 
   const handleIncorrectGuess = async () => {
-    if (attempts + 1 > maxAttempts) {
+    if (attempts + 1 >= maxAttempts) {
       setGameLost(true);
       if (session?.user?.id) {
         await resetStreakOnLoss();
+        await updateGameStats(false, maxAttempts);
       }
       saveGameState();
     } else {
