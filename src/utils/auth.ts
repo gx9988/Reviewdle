@@ -54,6 +54,8 @@ export const signOut = async () => {
       description: "Signed out successfully",
     });
 
+    window.location.href = '/';
+
   } catch (error) {
     console.error("Error in signOut:", error);
     toast({
