@@ -1,6 +1,6 @@
 export const ShareButton = () => {
   const handleShare = () => {
-    const url = window.location.href;
+    const url = "https://reviewdle.com";
     const message = `Can you guess the movie of the day?! 🎬 Check it out on Reviewdle.com! ${url}`;
     
     if (navigator.share) {
