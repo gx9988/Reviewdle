@@ -8,14 +8,27 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const fetchDailyMovie = async () => {
   const today = new Date().toISOString().split('T')[0];
-  const { data, error } = await supabase
+  
+  // First try to get today's movie
+  const { data: existingMovie, error: fetchError } = await supabase
     .from('movies')
     .select('*')
     .eq('used_on', today)
     .single();
 
-  if (error) throw error;
-  return data;
+  if (existingMovie) {
+    return existingMovie;
+  }
+
+  // If no movie exists for today, call get_next_movie() function
+  const { data: newMovie, error: functionError } = await supabase
+    .rpc('get_next_movie');
+
+  if (functionError) {
+    throw functionError;
+  }
+
+  return newMovie;
 };
 
 const LoadingState = () => (
