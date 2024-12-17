@@ -23,17 +23,24 @@ const movieLibrary = [
 const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="h-[35vh] sm:h-[40vh] relative overflow-hidden">
+      <div className="h-[35vh] sm:h-[40vh] relative overflow-hidden bg-gray-200">
         <div className="absolute top-2 left-4 text-xs text-white/70 z-10 font-serif">est.2023</div>
         <img 
           src="/lovable-uploads/b951058c-38ab-4b10-8d47-13e9ce6642a9.png"
           alt="Reviewdle Banner"
-          className="w-full h-full object-cover object-center"
+          className="w-full h-full object-cover object-center transition-opacity duration-300"
           loading="eager"
           fetchPriority="high"
           decoding="async"
           width={1920}
           height={1080}
+          style={{
+            backgroundImage: 'linear-gradient(to bottom, #1a1a1a, #2a2a2a)',
+            opacity: 1
+          }}
+          onLoad={(e) => {
+            e.currentTarget.style.opacity = '1';
+          }}
         />
         <div 
           className="absolute inset-0 bg-gradient-to-b from-transparent to-background" 
