@@ -2,60 +2,25 @@ import { Header } from "@/components/Header";
 import { DateDisplay } from "@/components/DateDisplay";
 import { GameContainer } from "@/components/GameContainer";
 import { ShareButton } from "@/components/ShareButton";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { Skeleton } from "@/components/ui/skeleton";
 
-const fetchDailyMovie = async () => {
-  const today = new Date().toISOString().split('T')[0];
-  
-  // First try to get today's movie
-  const { data: existingMovie, error: fetchError } = await supabase
-    .from('movies')
-    .select('*')
-    .eq('used_on', today)
-    .single();
-
-  if (existingMovie) {
-    return existingMovie;
+const movieLibrary = [
+  {
+    title: "Scream",
+    year: 1996,
+    starring: "Neve Campbell",
+    reviews: [
+      "A masterful blend of horror and satire that keeps you guessing until the very end. The clever script turns typical slasher tropes on their head while delivering genuine scares.",
+      "This meta-horror masterpiece dissects the genre with surgical precision. The killer's knowledge of horror movie rules creates a uniquely terrifying game of cat and mouse.",
+      "A brilliant deconstruction of the slasher genre that manages to be both scary and darkly humorous. The performances are pitch-perfect, especially from our final girl.",
+      "The film's self-awareness elevates it above standard horror fare, while never sacrificing the tension and thrills that make the genre great.",
+      "This iconic movie started a franchise that left us hanging on every call."
+    ],
+    reviewByGod: "The perfect mix of horror and humor, 'Scream' redefines the genre while keeping you on the edge. Ghostface remains one of the most memorable villains in horror history. A 90s masterpiece that's as witty as it is scary.",
+    rating: "4.5/5 - Reviewdle God"
   }
-
-  // If no movie exists for today, call get_next_movie() function
-  const { data: newMovie, error: functionError } = await supabase
-    .rpc('get_next_movie');
-
-  if (functionError) {
-    throw functionError;
-  }
-
-  return newMovie;
-};
-
-const LoadingState = () => (
-  <div className="space-y-4 animate-pulse">
-    <Skeleton className="h-8 w-3/4 mx-auto" />
-    <Skeleton className="h-32 w-full" />
-    <Skeleton className="h-12 w-1/2 mx-auto" />
-  </div>
-);
+];
 
 const Index = () => {
-  const { data: movie, isLoading, error } = useQuery({
-    queryKey: ['dailyMovie'],
-    queryFn: fetchDailyMovie,
-    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    gcTime: 1000 * 60 * 30, // Keep in cache for 30 minutes (previously cacheTime)
-  });
-
-  if (error) {
-    console.error('Error fetching movie:', error);
-    return (
-      <div className="text-center text-red-500 mt-8">
-        Unable to load today's movie. Please try again later.
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="h-[35vh] sm:h-[40vh] relative overflow-hidden">
@@ -79,11 +44,7 @@ const Index = () => {
       <div className="max-w-4xl mx-auto px-4 py-4 sm:py-6 -mt-12 sm:-mt-16 relative z-10">
         <Header />
         <DateDisplay />
-        {isLoading ? (
-          <LoadingState />
-        ) : movie ? (
-          <GameContainer movie={movie} />
-        ) : null}
+        <GameContainer movie={movieLibrary[0]} />
         <ShareButton />
       </div>
     </div>
