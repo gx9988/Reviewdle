@@ -20,7 +20,14 @@ export const UserStats = ({
   averageGuesses
 }: UserStatsProps) => {
   const formatDate = (dateString: string | null | undefined) => {
-    if (!dateString) return 'N/A';
+    if (!dateString) {
+      // If no date is provided, return today's date
+      return new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
