@@ -19,8 +19,9 @@ export const GameStateManager = ({
   useEffect(() => {
     const currentDate = getESTDate();
     const lastPlayedDate = localStorage.getItem('lastPlayedDate');
+    const gameState = JSON.parse(localStorage.getItem('gameState') || '{}');
     
-    if (lastPlayedDate === currentDate && (gameWon || gameLost)) {
+    if (lastPlayedDate === currentDate && gameState.gameWon) {
       setHasPlayed(true);
       toast({
         title: "Already Played",
