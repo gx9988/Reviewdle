@@ -44,37 +44,61 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
   } = useGameState(maxAttempts);
 
   const updateGameStats = async (won: boolean, attempts: number) => {
-    if (!session?.user?.id) return;
+    if (!session?.user?.id) {
+      console.log('No user session found, skipping stats update');
+      return;
+    }
 
     try {
-      const { data: currentStats } = await supabase
+      console.log('Updating game stats for user:', session.user.id);
+      
+      const { data: currentStats, error: fetchError } = await supabase
         .from('profiles')
         .select('total_games, games_won, total_guesses, fastest_win, average_guesses')
         .eq('id', session.user.id)
         .single();
 
-      if (!currentStats) return;
+      if (fetchError) {
+        console.error('Error fetching current stats:', fetchError);
+        throw fetchError;
+      }
+
+      console.log('Current stats:', currentStats);
 
       const updates = {
-        total_games: (currentStats.total_games || 0) + 1,
-        games_won: won ? (currentStats.games_won || 0) + 1 : (currentStats.games_won || 0),
-        total_guesses: (currentStats.total_guesses || 0) + attempts,
+        total_games: (currentStats?.total_games || 0) + 1,
+        games_won: won ? (currentStats?.games_won || 0) + 1 : (currentStats?.games_won || 0),
+        total_guesses: (currentStats?.total_guesses || 0) + attempts,
         fastest_win: won ? 
-          (currentStats.fastest_win ? Math.min(currentStats.fastest_win, attempts) : attempts) : 
-          currentStats.fastest_win,
+          (currentStats?.fastest_win ? Math.min(currentStats.fastest_win, attempts) : attempts) : 
+          currentStats?.fastest_win,
         average_guesses: (
-          ((currentStats.total_guesses || 0) + attempts) / 
-          ((currentStats.total_games || 0) + 1)
+          ((currentStats?.total_guesses || 0) + attempts) / 
+          ((currentStats?.total_games || 0) + 1)
         ).toFixed(2)
       };
 
-      await supabase
+      console.log('Updating stats with:', updates);
+
+      const { error: updateError } = await supabase
         .from('profiles')
         .update(updates)
         .eq('id', session.user.id);
 
+      if (updateError) {
+        console.error('Error updating stats:', updateError);
+        throw updateError;
+      }
+
+      console.log('Stats updated successfully');
+
     } catch (error) {
-      console.error('Error updating game stats:', error);
+      console.error('Error in updateGameStats:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update game statistics",
+        variant: "destructive",
+      });
     }
   };
 
@@ -98,6 +122,7 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
     setWrongGuessMessage("");
     
     if (session?.user?.id) {
+      console.log('Handling correct guess for user:', session.user.id);
       await updateStreak();
       await updateGameStats(true, attempts);
     }
@@ -114,6 +139,7 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
     if (attempts + 1 >= maxAttempts) {
       setGameLost(true);
       if (session?.user?.id) {
+        console.log('Handling game loss for user:', session.user.id);
         await resetStreakOnLoss();
         await updateGameStats(false, maxAttempts);
       }
