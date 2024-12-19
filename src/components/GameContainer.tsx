@@ -139,7 +139,7 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
     const nextAttempt = attempts + 1;
     setAttempts(nextAttempt);
     
-    if (nextAttempt >= maxAttempts) {
+    if (nextAttempt > maxAttempts) {
       setGameLost(true);
       if (session?.user?.id) {
         console.log('Handling game loss for user:', session.user.id);
