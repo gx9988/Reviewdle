@@ -17,11 +17,7 @@ export const MovieReview = ({ attempt, maxAttempts, review }: MovieReviewProps) 
         </strong>
       </p>
       <div className="text-base sm:text-lg text-card-foreground text-center font-serif italic">
-        <p className="mt-2">
-          {attempt === maxAttempts 
-            ? review
-            : `"${review}"`}
-        </p>
+        <p className="mt-2">"{review}"</p>
       </div>
     </div>
   );
