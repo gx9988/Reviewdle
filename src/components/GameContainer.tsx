@@ -65,17 +65,22 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
 
       console.log('Current stats:', currentStats);
 
+      // Calculate new stats
+      const newTotalGames = (currentStats?.total_games || 0) + 1;
+      const newGamesWon = won ? (currentStats?.games_won || 0) + 1 : (currentStats?.games_won || 0);
+      const newTotalGuesses = (currentStats?.total_guesses || 0) + attempts;
+      const newFastestWin = won ? 
+        (currentStats?.fastest_win ? Math.min(currentStats.fastest_win, attempts) : attempts) : 
+        currentStats?.fastest_win;
+      const newAverageGuesses = (newTotalGuesses / newTotalGames).toFixed(2);
+
       const updates = {
-        total_games: (currentStats?.total_games || 0) + 1,
-        games_won: won ? (currentStats?.games_won || 0) + 1 : (currentStats?.games_won || 0),
-        total_guesses: (currentStats?.total_guesses || 0) + attempts,
-        fastest_win: won ? 
-          (currentStats?.fastest_win ? Math.min(currentStats.fastest_win, attempts) : attempts) : 
-          currentStats?.fastest_win,
-        average_guesses: (
-          ((currentStats?.total_guesses || 0) + attempts) / 
-          ((currentStats?.total_games || 0) + 1)
-        ).toFixed(2)
+        total_games: newTotalGames,
+        games_won: newGamesWon,
+        total_guesses: newTotalGuesses,
+        fastest_win: newFastestWin,
+        average_guesses: newAverageGuesses,
+        last_played: getESTDate()
       };
 
       console.log('Updating stats with:', updates);
