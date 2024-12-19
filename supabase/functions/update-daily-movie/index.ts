@@ -24,6 +24,8 @@ Deno.serve(async (req) => {
       }
     )
 
+    console.log('Calling get_next_movie() function...')
+    
     // Call the get_next_movie() function
     const { data: movie, error: fnError } = await supabaseClient
       .rpc('get_next_movie')
