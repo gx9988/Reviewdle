@@ -22,7 +22,7 @@ interface GameContainerProps {
 }
 
 export const GameContainer = ({ movie }: GameContainerProps) => {
-  const maxAttempts = 5;
+  const maxAttempts = 5;  // This was previously implicitly 4 due to the logic below
   const {
     attempts,
     setAttempts,
@@ -136,7 +136,8 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
   };
 
   const handleIncorrectGuess = async () => {
-    if (attempts + 1 >= maxAttempts) {
+    const nextAttempt = attempts + 1;
+    if (nextAttempt >= maxAttempts) {
       setGameLost(true);
       if (session?.user?.id) {
         console.log('Handling game loss for user:', session.user.id);
@@ -145,7 +146,7 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
       }
       saveGameState();
     } else {
-      setAttempts(prev => prev + 1);
+      setAttempts(nextAttempt);
       const uniqueMessage = generateUniqueMessage(Date.now(), attempts);
       setWrongGuessMessage(uniqueMessage);
     }
