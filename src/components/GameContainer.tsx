@@ -136,7 +136,9 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
   };
 
   const handleIncorrectGuess = async () => {
-    if (attempts + 1 >= maxAttempts) {
+    const nextAttempt = attempts + 1;
+    if (nextAttempt === maxAttempts) {
+      setAttempts(nextAttempt);
       setGameLost(true);
       if (session?.user?.id) {
         console.log('Handling game loss for user:', session.user.id);
@@ -145,7 +147,7 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
       }
       saveGameState();
     } else {
-      setAttempts(prev => prev + 1);
+      setAttempts(nextAttempt);
       const uniqueMessage = generateUniqueMessage(Date.now(), attempts);
       setWrongGuessMessage(uniqueMessage);
     }
