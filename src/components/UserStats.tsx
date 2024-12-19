@@ -19,7 +19,8 @@ export const UserStats = ({
   fastestWin,
   averageGuesses
 }: UserStatsProps) => {
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -33,7 +34,7 @@ export const UserStats = ({
     <div className="space-y-3">
       <div className="grid grid-cols-2 gap-2 text-sm">
         <p className="text-muted-foreground">Member since:</p>
-        <p className="text-right">{joinedAt ? formatDate(joinedAt) : 'Loading...'}</p>
+        <p className="text-right">{formatDate(joinedAt)}</p>
         
         <p className="text-muted-foreground">Current Streak:</p>
         <p className="text-right">{streak} days</p>
