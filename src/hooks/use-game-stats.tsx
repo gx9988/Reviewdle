@@ -24,7 +24,7 @@ export const useGameStats = () => {
 
       if (fetchError) {
         console.error('Error fetching current stats:', fetchError);
-        throw fetchError;
+        return; // Silent fail for non-logged in users
       }
 
       console.log('Current stats:', currentStats);
@@ -56,18 +56,28 @@ export const useGameStats = () => {
 
       if (updateError) {
         console.error('Error updating stats:', updateError);
-        throw updateError;
+        // Only show error toast for logged-in users who failed to update
+        if (userId) {
+          toast({
+            title: "Stats Update",
+            description: "Your game has been recorded but stats may be incomplete. Please try again later.",
+            variant: "default",
+          });
+        }
       }
 
       console.log('Stats updated successfully');
 
     } catch (error) {
       console.error('Error in updateGameStats:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update game statistics",
-        variant: "destructive",
-      });
+      // Only show error toast for logged-in users
+      if (userId) {
+        toast({
+          title: "Stats Update",
+          description: "Unable to update stats at this time. Please try again later.",
+          variant: "default",
+        });
+      }
     }
   };
 
