@@ -4,9 +4,6 @@ interface UserStatsProps {
   lastPlayed?: string | null;
   totalGames?: number;
   gamesWon?: number;
-  totalGuesses?: number;
-  fastestWin?: number;
-  averageGuesses?: number;
 }
 
 export const UserStats = ({ 
@@ -15,9 +12,6 @@ export const UserStats = ({
   lastPlayed,
   totalGames = 0,
   gamesWon = 0,
-  totalGuesses = 0,
-  fastestWin,
-  averageGuesses
 }: UserStatsProps) => {
   const formatDate = (dateString: string | null | undefined) => {
     if (!dateString) {
@@ -46,31 +40,8 @@ export const UserStats = ({
         <p className="text-muted-foreground">Current Streak:</p>
         <p className="text-right">{streak} days</p>
         
-        <p className="text-muted-foreground">Games Played:</p>
-        <p className="text-right">{totalGames}</p>
-        
-        <p className="text-muted-foreground">Games Won:</p>
-        <p className="text-right">{gamesWon}</p>
-        
         <p className="text-muted-foreground">Win Rate:</p>
         <p className="text-right">{winRate}%</p>
-        
-        <p className="text-muted-foreground">Total Guesses:</p>
-        <p className="text-right">{totalGuesses}</p>
-        
-        {fastestWin && (
-          <>
-            <p className="text-muted-foreground">Fastest Win:</p>
-            <p className="text-right">{fastestWin} {fastestWin === 1 ? 'guess' : 'guesses'}</p>
-          </>
-        )}
-        
-        {averageGuesses && (
-          <>
-            <p className="text-muted-foreground">Average Guesses:</p>
-            <p className="text-right">{Number(averageGuesses).toFixed(1)}</p>
-          </>
-        )}
         
         <p className="text-muted-foreground">Last Played:</p>
         <p className="text-right">{lastPlayed ? formatDate(lastPlayed) : 'Never'}</p>
