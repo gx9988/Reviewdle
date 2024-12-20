@@ -1,16 +1,23 @@
 export const ShareButton = () => {
-  const handleShare = () => {
-    const url = "https://reviewdle.com";
-    const message = `Check out the movie of the day on reviewdle.com! 🎬`;
-    
-    if (navigator.share) {
-      navigator.share({
-        title: 'Reviewdle',
-        text: message,
-        url: url
-      }).catch(console.error);
-    } else {
-      window.open(`sms:?&body=${encodeURIComponent(message)}`);
+  const handleShare = async () => {
+    const shareData = {
+      title: 'Reviewdle - Daily Movie Review Game',
+      text: 'Check out the movie of the day on reviewdle.com! 🎬',
+      url: 'https://reviewdle.com'
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else if (navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback for browsers that don't support sharing
+        const shareUrl = `sms:?&body=${encodeURIComponent(`${shareData.text} ${shareData.url}`)}`;
+        window.open(shareUrl);
+      }
+    } catch (error) {
+      console.error('Error sharing:', error);
     }
   };
 
