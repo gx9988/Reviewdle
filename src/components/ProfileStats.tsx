@@ -13,7 +13,7 @@ import { useAuth } from "@/hooks/use-auth";
 export const ProfileStats = () => {
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useIsMobile();
-  const { session, profile, loading } = useAuth();
+  const { session, profile, loading, updateProfileAvatar } = useAuth();
 
   const handleSignOut = () => {
     setIsOpen(false);
