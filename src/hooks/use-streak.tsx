@@ -21,24 +21,15 @@ export const useStreak = () => {
 
       if (fetchError) throw fetchError;
 
+      let newStreak = 1; // Default for first win or when starting a new streak
+
       // If user has already played today, don't update the streak
       if (profile?.last_played === currentDate) {
         console.log('Already played today, keeping current streak of', profile.streak);
         return;
       }
 
-      let newStreak = 1; // Default for first win
-      
-      if (profile?.last_played && isYesterday(profile.last_played)) {
-        // If last played was yesterday, increment streak
-        newStreak = (profile.streak || 0) + 1;
-        console.log('Incrementing streak from', profile.streak, 'to', newStreak);
-      } else if (profile?.last_played && profile.last_played !== currentDate) {
-        // If last played was not yesterday (and not today), reset streak to 1
-        newStreak = 1;
-        console.log('Resetting streak to 1 (last played:', profile.last_played, ')');
-      }
-
+      // Update streak to 1 for a win, regardless of previous streak
       const { error: updateError } = await supabase
         .from('profiles')
         .update({
@@ -54,7 +45,7 @@ export const useStreak = () => {
 
       toast({
         title: "Streak Updated!",
-        description: `Your current streak is ${newStreak} day${newStreak === 1 ? '' : 's'}!`,
+        description: `Your current streak is ${newStreak} day!`,
       });
 
     } catch (error) {
