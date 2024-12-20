@@ -28,9 +28,6 @@ export const ProfileContent = ({
         lastPlayed={profile?.last_played}
         totalGames={profile?.total_games}
         gamesWon={profile?.games_won}
-        totalGuesses={profile?.total_guesses}
-        fastestWin={profile?.fastest_win}
-        averageGuesses={profile?.average_guesses}
       />
       <SignOutButton onSignOut={onSignOut} />
     </div>
