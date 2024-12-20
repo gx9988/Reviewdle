@@ -1,7 +1,7 @@
 export const ShareButton = () => {
   const handleShare = () => {
     const url = "https://reviewdle.com";
-    const message = `Guess the movie of the day! 🎬 Check it out on Reviewdle! ${url}`;
+    const message = `Check out the movie of the day on reviewdle.com!`;
     
     if (navigator.share) {
       navigator.share({
