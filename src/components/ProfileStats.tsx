@@ -13,7 +13,7 @@ import { useAuth } from "@/hooks/use-auth";
 export const ProfileStats = () => {
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useIsMobile();
-  const { session, profile, updateProfileAvatar } = useAuth();
+  const { session, profile, loading } = useAuth();
 
   const handleSignOut = () => {
     setIsOpen(false);
@@ -26,6 +26,10 @@ export const ProfileStats = () => {
       setIsOpen(!isOpen);
     }
   };
+
+  if (loading) {
+    return null;
+  }
 
   return (
     <HoverCard 

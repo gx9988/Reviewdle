@@ -5,6 +5,7 @@ import { toast } from "@/hooks/use-toast";
 export const useAuth = () => {
   const [session, setSession] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   const getProfile = async (userId: string) => {
     try {
@@ -21,7 +22,6 @@ export const useAuth = () => {
       }
 
       console.log("Profile data:", data);
-      // Only update non-avatar profile data if we already have an avatar
       setProfile(prev => ({
         ...data,
         avatar_url: prev?.avatar_url || data.avatar_url
@@ -67,14 +67,12 @@ export const useAuth = () => {
     setSession(session);
     
     if (session?.user) {
-      // Immediately set profile with avatar from Google metadata
       const avatarUrl = session.user.user_metadata?.picture || 
                        session.user.user_metadata?.avatar_url;
                        
       console.log("Avatar URL from metadata:", avatarUrl);
       
       if (avatarUrl) {
-        // Set initial profile state with just the avatar
         setProfile(prev => ({ 
           ...prev, 
           id: session.user.id,
@@ -82,39 +80,46 @@ export const useAuth = () => {
         }));
       }
       
-      // Then fetch the full profile in the background
       await getProfile(session.user.id);
       
-      // Update avatar in database if needed
       if (avatarUrl) {
         await updateProfileAvatar(avatarUrl);
       }
     } else {
       setProfile(null);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log("Initial session:", session);
-      handleSession(session);
-    });
+    const initializeAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        await handleSession(session);
 
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      console.log("Auth state changed:", _event, session);
-      await handleSession(session);
-    });
+        const {
+          data: { subscription },
+        } = supabase.auth.onAuthStateChange(async (_event, session) => {
+          console.log("Auth state changed:", _event, session);
+          await handleSession(session);
+        });
 
-    return () => subscription.unsubscribe();
+        return () => {
+          subscription.unsubscribe();
+        };
+      } catch (error) {
+        console.error("Error initializing auth:", error);
+        setLoading(false);
+      }
+    };
+
+    initializeAuth();
   }, []);
 
   return {
     session,
     profile,
+    loading,
     setProfile,
     updateProfileAvatar
   };

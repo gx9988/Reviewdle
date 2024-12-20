@@ -54,9 +54,6 @@ export const signOut = async () => {
     toast({
       title: "Signed out successfully",
     });
-    
-    // Force a hard refresh to clear all state
-    window.location.href = '/';
   } catch (error) {
     console.error("Error in signOut:", error);
     toast({
