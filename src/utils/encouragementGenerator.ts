@@ -1,15 +1,23 @@
 const encouragements = [
-  "Ahh you didn't get it, no worries happens to the best of us!",
-  "Don't sweat it, even movie critics get stumped sometimes!",
-  "Close but no cigar! Even the Reviewdle God misses occasionally.",
-  "Not quite there, but hey, that's what makes it fun!",
-  "Better luck next time! Even the greatest movie buffs get stuck.",
-  "No worries, tomorrow's another chance to shine!",
-  "Almost had it! The movie world is full of surprises.",
-  "Keep your head up! Even Spielberg would find this challenging."
+  "Better luck next time! 🎬",
+  "Don't give up, movie buff! 🍿",
+  "Almost had it! Try again tomorrow! 🎥",
+  "That was a tricky one! Come back tomorrow! 🎬",
+  "Keep watching movies, you'll get the next one! 🍿",
+  "Nice try! Tomorrow brings a new movie! 🎥"
 ];
 
+let lastIndex = -1;
+
 export const generateEncouragement = (timestamp: number): string => {
-  const seed = timestamp % 1000;
-  return encouragements[seed % encouragements.length];
+  // Use timestamp to generate a seemingly random but deterministic index
+  let index = Math.floor((timestamp % 1000) / (1000 / encouragements.length));
+  
+  // Avoid repeating the same message twice in a row
+  if (index === lastIndex) {
+    index = (index + 1) % encouragements.length;
+  }
+  
+  lastIndex = index;
+  return encouragements[index];
 };
