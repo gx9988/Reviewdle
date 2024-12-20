@@ -8,26 +8,16 @@ export const GoogleSignIn = () => {
   };
 
   return (
-    <div className="space-y-3">
-      <div className="space-y-2 text-sm text-muted-foreground">
-        <p>Sign in securely with Google to:</p>
-        <ul className="list-disc pl-5 space-y-1">
-          <li>Track your daily streak</li>
-          <li>Save your game progress</li>
-          <li>Compare stats with friends</li>
-        </ul>
-      </div>
+    <div className="space-y-2">
+      <p className="text-sm text-muted-foreground">Sign in to track your stats</p>
       <Button 
         variant="outline" 
-        className="w-full font-medium"
+        className="w-full"
         onClick={handleSignIn}
       >
         <GoogleLogo />
-        Continue with Google
+        Sign in with Google
       </Button>
-      <p className="text-[11px] text-center text-muted-foreground">
-        Your data is securely handled and we only access your basic profile info.
-      </p>
     </div>
   );
 };
