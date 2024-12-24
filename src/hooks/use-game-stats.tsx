@@ -20,11 +20,11 @@ export const useGameStats = () => {
         .from('profiles')
         .select('total_games, games_won, total_guesses, fastest_win, average_guesses')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
       if (fetchError) {
         console.error('Error fetching current stats:', fetchError);
-        return; // Silent fail for non-logged in users
+        return;
       }
 
       console.log('Current stats:', currentStats);
@@ -33,10 +33,17 @@ export const useGameStats = () => {
       const newTotalGames = (currentStats?.total_games || 0) + 1;
       const newGamesWon = won ? (currentStats?.games_won || 0) + 1 : (currentStats?.games_won || 0);
       const newTotalGuesses = (currentStats?.total_guesses || 0) + attempts;
+      
+      // Only update fastest win if this is a win and either there's no previous fastest win
+      // or this attempt was faster
       const newFastestWin = won ? 
         (currentStats?.fastest_win ? Math.min(currentStats.fastest_win, attempts) : attempts) : 
         currentStats?.fastest_win;
-      const newAverageGuesses = (newTotalGuesses / newTotalGames).toFixed(2);
+      
+      // Calculate new average guesses
+      const newAverageGuesses = newTotalGames > 0 ? 
+        Number((newTotalGuesses / newTotalGames).toFixed(2)) : 
+        null;
 
       const updates = {
         total_games: newTotalGames,
@@ -56,26 +63,24 @@ export const useGameStats = () => {
 
       if (updateError) {
         console.error('Error updating stats:', updateError);
-        // Only show error toast for logged-in users who failed to update
         if (userId) {
           toast({
-            title: "Stats Update",
+            title: "Stats Update Error",
             description: "Your game has been recorded but stats may be incomplete. Please try again later.",
-            variant: "default",
+            variant: "destructive",
           });
         }
+      } else {
+        console.log('Stats updated successfully');
       }
-
-      console.log('Stats updated successfully');
 
     } catch (error) {
       console.error('Error in updateGameStats:', error);
-      // Only show error toast for logged-in users
       if (userId) {
         toast({
-          title: "Stats Update",
+          title: "Stats Update Error",
           description: "Unable to update stats at this time. Please try again later.",
-          variant: "default",
+          variant: "destructive",
         });
       }
     }
