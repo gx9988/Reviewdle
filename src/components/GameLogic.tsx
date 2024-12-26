@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MovieReview } from "./MovieReview";
 import { GuessInput } from "./GuessInput";
 import { MovieResult } from "./MovieResult";
@@ -42,6 +42,15 @@ export const GameLogic = ({
 }: GameLogicProps) => {
   const { attempts, gameWon, gameLost, guess, showMovie, wrongGuessMessage } = gameState;
   const { setGuess, makeGuess, onReveal } = handlers;
+  const [hasRated, setHasRated] = useState(false);
+
+  const handleRating = (isPositive: boolean) => {
+    toast({
+      title: "Thanks for rating!",
+      description: isPositive ? "Glad you enjoyed it!" : "We'll try to do better next time!",
+    });
+    setHasRated(true);
+  };
 
   return (
     <>
@@ -70,10 +79,12 @@ export const GameLogic = ({
         <MovieResult
           movie={movie}
           isWin={gameWon}
+          onRate={handleRating}
+          hasRated={hasRated}
         />
       )}
 
-      <CountdownTimer isOpen={gameWon || (gameLost && showMovie)} />
+      <CountdownTimer isOpen={(gameWon || (gameLost && showMovie)) && hasRated} />
     </>
   );
 };
