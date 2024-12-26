@@ -38,6 +38,16 @@ export const CountdownTimer = ({ isOpen }: CountdownTimerProps) => {
     <Dialog open={isOpen}>
       <DialogContent className="sm:max-w-md">
         <div className="text-center space-y-4">
+          <div className="w-full flex justify-center mb-6">
+            <img 
+              src="/lovable-uploads/962af28b-5dfb-4d3e-a69d-07de45af245d.png"
+              alt="Reviewdle God"
+              className="w-48 h-48 object-cover animate-bounce"
+              style={{
+                animation: 'bounce 2s infinite'
+              }}
+            />
+          </div>
           <h2 className="text-xl font-semibold">Next Reviewdle In</h2>
           <div className="text-4xl font-mono font-bold text-primary">
             {timeLeft}
