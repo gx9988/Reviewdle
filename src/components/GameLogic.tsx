@@ -3,6 +3,7 @@ import { MovieReview } from "./MovieReview";
 import { GuessInput } from "./GuessInput";
 import { MovieResult } from "./MovieResult";
 import { LostGameState } from "./LostGameState";
+import { CountdownTimer } from "./CountdownTimer";
 import { generateUniqueMessage } from "@/utils/messageGenerator";
 import { toast } from "@/hooks/use-toast";
 
@@ -71,6 +72,8 @@ export const GameLogic = ({
           isWin={gameWon}
         />
       )}
+
+      <CountdownTimer isOpen={gameWon || (gameLost && showMovie)} />
     </>
   );
 };
