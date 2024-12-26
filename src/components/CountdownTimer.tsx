@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useEstDate } from "@/hooks/use-est-date";
+import { ShareButton } from "@/components/ShareButton";
 
 interface CountdownTimerProps {
   isOpen: boolean;
@@ -42,9 +43,10 @@ export const CountdownTimer = ({ isOpen }: CountdownTimerProps) => {
             <img 
               src="/lovable-uploads/962af28b-5dfb-4d3e-a69d-07de45af245d.png"
               alt="Reviewdle God"
-              className="w-48 h-48 object-cover animate-bounce"
+              className="w-48 h-48 object-cover"
               style={{
-                animation: 'bounce 2s infinite'
+                animation: 'bounce 2s ease-in-out infinite',
+                transform: 'translateY(0)',
               }}
             />
           </div>
@@ -53,8 +55,9 @@ export const CountdownTimer = ({ isOpen }: CountdownTimerProps) => {
             {timeLeft}
           </div>
           <p className="text-sm text-muted-foreground">
-            Come back at midnight Eastern Time for a new movie!
+            Check back at 12am EST for the next Reviewdle!
           </p>
+          <ShareButton />
         </div>
       </DialogContent>
     </Dialog>

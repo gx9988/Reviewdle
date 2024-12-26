@@ -72,7 +72,7 @@ export default {
           to: { height: "0" },
         },
         bounce: {
-          '0%, 100%': { transform: 'translateY(-5%)' },
+          '0%, 100%': { transform: 'translateY(-15px)' },
           '50%': { transform: 'translateY(0)' },
         }
       },
