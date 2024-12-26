@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MovieReview } from "./MovieReview";
 import { GuessInput } from "./GuessInput";
 import { MovieResult } from "./MovieResult";
@@ -42,7 +42,10 @@ export const GameLogic = ({
 }: GameLogicProps) => {
   const { attempts, gameWon, gameLost, guess, showMovie, wrongGuessMessage } = gameState;
   const { setGuess, makeGuess, onReveal } = handlers;
-  const [hasRated, setHasRated] = useState(false);
+  const [hasRated, setHasRated] = useState(() => {
+    const savedRating = localStorage.getItem('hasRated');
+    return savedRating === 'true';
+  });
 
   const handleRating = (isPositive: boolean) => {
     toast({
@@ -50,7 +53,19 @@ export const GameLogic = ({
       description: isPositive ? "Glad you enjoyed it!" : "We'll try to do better next time!",
     });
     setHasRated(true);
+    localStorage.setItem('hasRated', 'true');
   };
+
+  // Reset rating when a new day starts
+  useEffect(() => {
+    const currentDate = localStorage.getItem('lastPlayedDate');
+    const today = new Date().toLocaleDateString('en-US', { timeZone: 'America/New_York' });
+    
+    if (currentDate !== today) {
+      localStorage.removeItem('hasRated');
+      setHasRated(false);
+    }
+  }, []);
 
   return (
     <>
