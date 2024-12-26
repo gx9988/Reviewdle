@@ -1,12 +1,13 @@
-import type { Config } from "tailwindcss";
+import { type Config } from "tailwindcss";
+import { fontFamily } from "tailwindcss/defaultTheme";
 
 export default {
   darkMode: ["class"],
   content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
   ],
   prefix: "",
   theme: {
@@ -18,10 +19,6 @@ export default {
       },
     },
     extend: {
-      fontFamily: {
-        'muller': ['Muller Next', 'sans-serif'],
-        serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
-      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -56,11 +53,19 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar))",
+          foreground: "hsl(var(--sidebar-foreground))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        sans: ["var(--font-sans)", ...fontFamily.sans],
+        heading: ["var(--font-heading)", ...fontFamily.sans],
       },
       keyframes: {
         "accordion-down": {
@@ -74,12 +79,16 @@ export default {
         bounce: {
           '0%, 100%': { transform: 'translateY(-15px)' },
           '50%': { transform: 'translateY(0)' },
+        },
+        'header-bounce': {
+          '0%, 100%': { transform: 'translateY(-5px)' },
+          '50%': { transform: 'translateY(0)' },
         }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "bounce": "bounce 2s ease-in-out infinite",
+        'header-bounce': 'header-bounce 2s ease-in-out infinite',
       },
     },
   },
