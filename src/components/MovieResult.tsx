@@ -21,7 +21,7 @@ export const MovieResult = ({ movie, isWin, onRate, hasRated }: MovieResultProps
       {isWin && (
         <div className="mb-4 text-center animate-fade-in">
           <p className="text-lg text-green-400 font-semibold">
-            🎉 Congratulations! You've guessed it correctly! 🎉
+            Congratulations! You've guessed it correctly!
           </p>
         </div>
       )}
