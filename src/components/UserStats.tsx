@@ -37,7 +37,7 @@ export const UserStats = ({
         <p className="text-muted-foreground">Member since:</p>
         <p className="text-right">{formatDate(joinedAt)}</p>
         
-        <p className="text-muted-foreground">Current Streak:</p>
+        <p className="text-muted-foreground">Win Streak:</p>
         <p className="text-right">{streak} days</p>
         
         <p className="text-muted-foreground">Win Rate:</p>
