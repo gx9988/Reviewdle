@@ -8,9 +8,8 @@ export const signInWithGoogle = async () => {
       options: {
         redirectTo: `${window.location.origin}`,
         queryParams: {
-          prompt: 'select_account',
           access_type: 'offline',
-        },
+        }
       }
     });
 
