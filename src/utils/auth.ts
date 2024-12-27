@@ -9,6 +9,8 @@ export const signInWithGoogle = async () => {
         redirectTo: `${window.location.origin}`,
         queryParams: {
           access_type: 'offline',
+          prompt: 'consent select_account',
+          login_hint: '',
         },
       }
     });
