@@ -17,21 +17,6 @@ export const useGameState = (maxAttempts: number) => {
   const { getESTDate } = useEstDate();
   const { updateStreak, resetStreakOnLoss } = useStreak();
 
-  const initializeGame = () => {
-    const currentDate = getESTDate();
-    const lastPlayedDate = localStorage.getItem('lastPlayedDate');
-    const lastMovieTitle = localStorage.getItem('currentMovieTitle');
-    const gameState = JSON.parse(localStorage.getItem('gameState') || '{}');
-    
-    // Reset if it's a new day or if the movie has changed
-    if (lastPlayedDate !== currentDate || lastMovieTitle !== currentMovieTitle) {
-      resetGame();
-      localStorage.setItem('currentMovieTitle', currentMovieTitle);
-    } else if (gameState.gameWon || gameState.gameLost) {
-      displaySavedGameState(gameState);
-    }
-  };
-
   const resetGame = () => {
     setAttempts(1);
     setGameWon(false);
@@ -39,14 +24,46 @@ export const useGameState = (maxAttempts: number) => {
     setGuess("");
     setShowMovie(false);
     setWrongGuessMessage("");
+    // Clear ALL relevant localStorage items
     localStorage.removeItem('gameState');
     localStorage.removeItem('lastPlayedDate');
+    localStorage.removeItem('currentMovieTitle');
+    localStorage.removeItem('hasRated');
+  };
+
+  const initializeGame = () => {
+    const currentDate = getESTDate();
+    const lastPlayedDate = localStorage.getItem('lastPlayedDate');
+    const lastMovieTitle = localStorage.getItem('currentMovieTitle');
+    
+    // Always reset if the movie has changed
+    if (lastMovieTitle !== currentMovieTitle) {
+      console.log('Movie changed from', lastMovieTitle, 'to', currentMovieTitle);
+      resetGame();
+      localStorage.setItem('currentMovieTitle', currentMovieTitle);
+      return;
+    }
+    
+    // Handle same-day game state
+    if (lastPlayedDate === currentDate) {
+      const gameState = JSON.parse(localStorage.getItem('gameState') || '{}');
+      if (gameState.gameWon || gameState.gameLost) {
+        displaySavedGameState(gameState);
+      }
+    } else {
+      // New day, reset everything
+      resetGame();
+      localStorage.setItem('currentMovieTitle', currentMovieTitle);
+    }
   };
 
   const displaySavedGameState = (gameState: any) => {
     setGameWon(gameState.gameWon);
     setGameLost(gameState.gameLost);
     setAttempts(gameState.attempts);
+    if (gameState.gameLost) {
+      setShowMovie(true);
+    }
   };
 
   const saveGameState = () => {
@@ -76,6 +93,7 @@ export const useGameState = (maxAttempts: number) => {
   // Effect to update currentMovieTitle when it changes
   useEffect(() => {
     if (currentMovieTitle) {
+      console.log('Initializing game with movie:', currentMovieTitle);
       initializeGame();
     }
   }, [currentMovieTitle]);
