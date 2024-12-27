@@ -10,7 +10,6 @@ export const signInWithGoogle = async () => {
         queryParams: {
           prompt: 'select_account',
           access_type: 'offline',
-          hd: window.location.hostname,
         },
       }
     });
