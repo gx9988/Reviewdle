@@ -9,8 +9,9 @@ export const signInWithGoogle = async () => {
         redirectTo: window.location.origin,
         queryParams: {
           access_type: 'offline',
-          prompt: 'consent select_account',
-          login_hint: '',
+          prompt: 'consent',
+          hd: 'reviewdle.com',
+          redirect_uri: window.location.origin
         },
       }
     });
