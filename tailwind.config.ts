@@ -81,7 +81,7 @@ export default {
           '50%': { transform: 'translateY(0)' },
         },
         'header-bounce': {
-          '0%, 100%': { transform: 'translateY(-5px)' },
+          '0%, 100%': { transform: 'translateY(-3px)' },
           '50%': { transform: 'translateY(0)' },
         }
       },
