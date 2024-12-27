@@ -12,33 +12,58 @@ export const useGameState = (maxAttempts: number) => {
   const [showMovie, setShowMovie] = useState(false);
   const [wrongGuessMessage, setWrongGuessMessage] = useState<string>("");
   const [session, setSession] = useState<any>(null);
+  const [currentMovieTitle, setCurrentMovieTitle] = useState<string>("");
 
   const { getESTDate } = useEstDate();
   const { updateStreak, resetStreakOnLoss } = useStreak();
-
-  const initializeGame = () => {
-    const currentDate = getESTDate();
-    const lastPlayedDate = localStorage.getItem('lastPlayedDate');
-    const gameState = JSON.parse(localStorage.getItem('gameState') || '{}');
-    
-    if (lastPlayedDate === currentDate && (gameState.gameWon || gameState.gameLost)) {
-      displaySavedGameState(gameState);
-    } else if (lastPlayedDate !== currentDate) {
-      resetGame();
-    }
-  };
 
   const resetGame = () => {
     setAttempts(1);
     setGameWon(false);
     setGameLost(false);
     setGuess("");
+    setShowMovie(false);
+    setWrongGuessMessage("");
+    // Clear ALL relevant localStorage items
+    localStorage.removeItem('gameState');
+    localStorage.removeItem('lastPlayedDate');
+    localStorage.removeItem('currentMovieTitle');
+    localStorage.removeItem('hasRated');
+  };
+
+  const initializeGame = () => {
+    const currentDate = getESTDate();
+    const lastPlayedDate = localStorage.getItem('lastPlayedDate');
+    const lastMovieTitle = localStorage.getItem('currentMovieTitle');
+    
+    // Always reset if the movie has changed
+    if (lastMovieTitle !== currentMovieTitle) {
+      console.log('Movie changed from', lastMovieTitle, 'to', currentMovieTitle);
+      resetGame();
+      localStorage.setItem('currentMovieTitle', currentMovieTitle);
+      return;
+    }
+    
+    // Handle same-day game state
+    if (lastPlayedDate === currentDate) {
+      const gameState = JSON.parse(localStorage.getItem('gameState') || '{}');
+      if (gameState.gameWon || gameState.gameLost) {
+        displaySavedGameState(gameState);
+      }
+    } else {
+      // New day, reset everything
+      resetGame();
+      localStorage.setItem('currentMovieTitle', currentMovieTitle);
+    }
   };
 
   const displaySavedGameState = (gameState: any) => {
     setGameWon(gameState.gameWon);
     setGameLost(gameState.gameLost);
     setAttempts(gameState.attempts);
+    if (gameState.gameLost) {
+      setShowMovie(true);
+    }
   };
 
   const saveGameState = () => {
@@ -52,7 +77,6 @@ export const useGameState = (maxAttempts: number) => {
   };
 
   useEffect(() => {
-    initializeGame();
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
     });
@@ -65,6 +89,14 @@ export const useGameState = (maxAttempts: number) => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Effect to update currentMovieTitle when it changes
+  useEffect(() => {
+    if (currentMovieTitle) {
+      console.log('Initializing game with movie:', currentMovieTitle);
+      initializeGame();
+    }
+  }, [currentMovieTitle]);
 
   return {
     attempts,
@@ -83,6 +115,7 @@ export const useGameState = (maxAttempts: number) => {
     updateStreak: () => session?.user?.id ? updateStreak(session.user.id) : Promise.resolve(),
     resetStreakOnLoss: () => session?.user?.id ? resetStreakOnLoss(session.user.id) : Promise.resolve(),
     saveGameState,
-    getESTDate
+    getESTDate,
+    setCurrentMovieTitle
   };
 };

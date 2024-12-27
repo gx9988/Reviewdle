@@ -3,6 +3,7 @@ import { GameStateManager } from "./GameStateManager";
 import { useGameState } from "@/hooks/use-game-state";
 import { useGameStats } from "@/hooks/use-game-stats";
 import { GuessHandler } from "./game/GuessHandler";
+import { useEffect } from "react";
 
 interface Movie {
   title: string;
@@ -36,10 +37,15 @@ export const GameContainer = ({ movie }: GameContainerProps) => {
     resetStreakOnLoss,
     saveGameState,
     getESTDate,
-    session
+    session,
+    setCurrentMovieTitle
   } = useGameState(maxAttempts);
 
   const { updateGameStats } = useGameStats();
+
+  useEffect(() => {
+    setCurrentMovieTitle(movie.title);
+  }, [movie.title, setCurrentMovieTitle]);
 
   const { makeGuess } = GuessHandler({
     movieTitle: movie.title,
