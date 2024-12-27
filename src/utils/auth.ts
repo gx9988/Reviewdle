@@ -6,12 +6,11 @@ export const signInWithGoogle = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: window.location.origin,
+        redirectTo: 'https://www.reviewdle.com',
         queryParams: {
           access_type: 'offline',
           prompt: 'consent',
-          hd: 'reviewdle.com',
-          redirect_uri: window.location.origin
+          hd: 'reviewdle.com'
         },
       }
     });
