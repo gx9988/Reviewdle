@@ -55,7 +55,7 @@ export const CountdownTimer = ({ isOpen }: CountdownTimerProps) => {
             {timeLeft}
           </div>
           <p className="text-sm text-muted-foreground">
-            Check back at 12am EST for the next Reviewdle!
+            Check back at 12am EST for the next movie!
           </p>
           <ShareButton />
         </div>
