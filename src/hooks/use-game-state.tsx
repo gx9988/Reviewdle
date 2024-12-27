@@ -12,6 +12,7 @@ export const useGameState = (maxAttempts: number) => {
   const [showMovie, setShowMovie] = useState(false);
   const [wrongGuessMessage, setWrongGuessMessage] = useState<string>("");
   const [session, setSession] = useState<any>(null);
+  const [currentMovieTitle, setCurrentMovieTitle] = useState<string>("");
 
   const { getESTDate } = useEstDate();
   const { updateStreak, resetStreakOnLoss } = useStreak();
@@ -19,12 +20,15 @@ export const useGameState = (maxAttempts: number) => {
   const initializeGame = () => {
     const currentDate = getESTDate();
     const lastPlayedDate = localStorage.getItem('lastPlayedDate');
+    const lastMovieTitle = localStorage.getItem('currentMovieTitle');
     const gameState = JSON.parse(localStorage.getItem('gameState') || '{}');
     
-    if (lastPlayedDate === currentDate && (gameState.gameWon || gameState.gameLost)) {
-      displaySavedGameState(gameState);
-    } else if (lastPlayedDate !== currentDate) {
+    // Reset if it's a new day or if the movie has changed
+    if (lastPlayedDate !== currentDate || lastMovieTitle !== currentMovieTitle) {
       resetGame();
+      localStorage.setItem('currentMovieTitle', currentMovieTitle);
+    } else if (gameState.gameWon || gameState.gameLost) {
+      displaySavedGameState(gameState);
     }
   };
 
@@ -33,6 +37,10 @@ export const useGameState = (maxAttempts: number) => {
     setGameWon(false);
     setGameLost(false);
     setGuess("");
+    setShowMovie(false);
+    setWrongGuessMessage("");
+    localStorage.removeItem('gameState');
+    localStorage.removeItem('lastPlayedDate');
   };
 
   const displaySavedGameState = (gameState: any) => {
@@ -52,7 +60,6 @@ export const useGameState = (maxAttempts: number) => {
   };
 
   useEffect(() => {
-    initializeGame();
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
     });
@@ -65,6 +72,13 @@ export const useGameState = (maxAttempts: number) => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Effect to update currentMovieTitle when it changes
+  useEffect(() => {
+    if (currentMovieTitle) {
+      initializeGame();
+    }
+  }, [currentMovieTitle]);
 
   return {
     attempts,
@@ -83,6 +97,7 @@ export const useGameState = (maxAttempts: number) => {
     updateStreak: () => session?.user?.id ? updateStreak(session.user.id) : Promise.resolve(),
     resetStreakOnLoss: () => session?.user?.id ? resetStreakOnLoss(session.user.id) : Promise.resolve(),
     saveGameState,
-    getESTDate
+    getESTDate,
+    setCurrentMovieTitle
   };
 };
