@@ -5,18 +5,18 @@ import { ShareButton } from "@/components/ShareButton";
 
 const movieLibrary = [
   {
-    title: "Scream",
-    year: 1996,
-    starring: "Neve Campbell",
+    title: "The Number 23",
+    year: 2007,
+    starring: "Jim Carrey",
     reviews: [
-      "A masterful blend of horror and satire that keeps you guessing until the very end. The clever script turns typical slasher tropes on their head while delivering genuine scares.",
-      "This meta-horror masterpiece dissects the genre with surgical precision. The killer's knowledge of horror movie rules creates a uniquely terrifying game of cat and mouse.",
-      "A brilliant deconstruction of the slasher genre that manages to be both scary and darkly humorous. The performances are pitch-perfect, especially from our final girl.",
-      "The film's self-awareness elevates it above standard horror fare, while never sacrificing the tension and thrills that make the genre great.",
-      "This iconic movie started a franchise that left us hanging on every call."
+      "A psychological thriller that delves into one man's obsession with a mysterious number. The protagonist's descent into paranoia creates an unsettling atmosphere throughout.",
+      "What starts as a simple birthday gift turns into a dark journey of obsession and conspiracy. The main character's transformation from skeptic to believer is particularly compelling.",
+      "The film weaves together reality and delusion as our lead character discovers eerie connections between his life and a disturbing novel. The number appears everywhere, driving him to the edge of sanity.",
+      "A departure from the actor's usual comedic roles, showing his range in a darker performance. The parallel storylines keep you guessing until the end.",
+      "The truth behind the number reveals a shocking connection to the protagonist's past."
     ],
-    reviewByGod: "The perfect mix of horror and humor, 'Scream' redefines the genre while keeping you on the edge. Ghostface remains one of the most memorable villains in horror history. A 90s masterpiece that's as witty as it is scary.",
-    rating: "4.5/5 - Reviewdle God"
+    reviewByGod: "A mind-bending thriller that explores the fine line between coincidence and fate. Jim Carrey delivers a haunting performance as a man consumed by numerical obsession. The film's dark atmosphere and psychological elements create an engaging puzzle that keeps viewers counting along.",
+    rating: "3.5/5 - Reviewdle God"
   }
 ];
 
