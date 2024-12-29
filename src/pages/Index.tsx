@@ -9,7 +9,7 @@ const movieLibrary = [
     year: 2007,
     starring: "Jim Carrey",
     reviews: [
-      "A psychological thriller that delves into one man's obsession with a mysterious number. The protagonist's descent into paranoia creates an unsettling atmosphere throughout.",
+      "A psychological thriller that follows a man's growing obsession after receiving an unusual birthday gift. The protagonist's descent into paranoia creates an unsettling atmosphere throughout.",
       "What starts as a simple birthday gift turns into a dark journey of obsession and conspiracy. The main character's transformation from skeptic to believer is particularly compelling.",
       "The film weaves together reality and delusion as our lead character discovers eerie connections between his life and a disturbing novel. The number appears everywhere, driving him to the edge of sanity.",
       "A departure from the actor's usual comedic roles, showing his range in a darker performance. The parallel storylines keep you guessing until the end.",
