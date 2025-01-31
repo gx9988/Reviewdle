@@ -9,7 +9,7 @@ const movieLibrary = [
     year: 1994,
     starring: "Tim Robbins, Morgan Freeman",
     reviews: [
-      "A tale of hope and friendship unfolds within the confines of a maximum-security prison. The protagonist's unwavering spirit becomes a beacon of inspiration for his fellow inmates.",
+      "A tale of hope and perseverance unfolds as an unlikely friendship develops between two men from different walks of life. Their bond grows stronger as they face life's challenges together.",
       "Through years of patient dedication, our main character cultivates relationships and skills that prove invaluable. His methodical approach to daily life masks deeper intentions.",
       "The power of time and perseverance takes center stage as a wrongfully convicted man refuses to let the system break him. His quiet intelligence serves a greater purpose.",
       "A story where appearances deceive, and the bonds formed behind prison walls transcend ordinary friendship. The narrator's perspective adds depth to this tale of justice and redemption.",
