@@ -5,18 +5,18 @@ import { ShareButton } from "@/components/ShareButton";
 
 const movieLibrary = [
   {
-    title: "The Number 23",
-    year: 2007,
-    starring: "Jim Carrey",
+    title: "The Shawshank Redemption",
+    year: 1994,
+    starring: "Tim Robbins, Morgan Freeman",
     reviews: [
-      "A psychological thriller that follows a man's growing obsession after receiving an unusual birthday gift. The protagonist's descent into paranoia creates an unsettling atmosphere throughout.",
-      "What starts as a simple birthday gift turns into a dark journey of obsession and conspiracy. The main character's transformation from skeptic to believer is particularly compelling.",
-      "The film weaves together reality and delusion as our lead character discovers eerie connections between his life and a disturbing novel. The number appears everywhere, driving him to the edge of sanity.",
-      "A departure from the actor's usual comedic roles, showing his range in a darker performance. The parallel storylines keep you guessing until the end.",
-      "The truth behind the number reveals a shocking connection to the protagonist's past."
+      "A tale of hope and friendship unfolds within the confines of a maximum-security prison. The protagonist's unwavering spirit becomes a beacon of inspiration for his fellow inmates.",
+      "Through years of patient dedication, our main character cultivates relationships and skills that prove invaluable. His methodical approach to daily life masks deeper intentions.",
+      "The power of time and perseverance takes center stage as a wrongfully convicted man refuses to let the system break him. His quiet intelligence serves a greater purpose.",
+      "A story where appearances deceive, and the bonds formed behind prison walls transcend ordinary friendship. The narrator's perspective adds depth to this tale of justice and redemption.",
+      "The truth behind decades of careful planning finally comes to light, revealing an extraordinary tale of patience and determination."
     ],
-    reviewByGod: "A mind-bending thriller that explores the fine line between coincidence and fate. Jim Carrey delivers a haunting performance as a man consumed by numerical obsession. The film's dark atmosphere and psychological elements create an engaging puzzle that keeps viewers counting along.",
-    rating: "3.5/5 - Reviewdle God"
+    reviewByGod: "A masterpiece that explores the indomitable human spirit and the power of hope. Through its deliberate pacing and rich character development, this prison drama transcends its setting to deliver a universal message about freedom, friendship, and the resilience of the human soul.",
+    rating: "4.9/5 - Reviewdle God"
   }
 ];
 
