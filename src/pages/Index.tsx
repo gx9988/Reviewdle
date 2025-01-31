@@ -5,18 +5,18 @@ import { ShareButton } from "@/components/ShareButton";
 
 const movieLibrary = [
   {
-    title: "The Shawshank Redemption",
-    year: 1994,
-    starring: "Tim Robbins, Morgan Freeman",
+    title: "Saving Private Ryan",
+    year: 1998,
+    starring: "Tom Hanks, Matt Damon",
     reviews: [
-      "A tale of hope and perseverance unfolds as an unlikely friendship develops between two men from different walks of life. Their bond grows stronger as they face life's challenges together.",
-      "Through years of patient dedication, our main character cultivates relationships and skills that prove invaluable. His methodical approach to daily life masks deeper intentions.",
-      "The power of time and perseverance takes center stage as a wrongfully convicted man refuses to let the system break him. His quiet intelligence serves a greater purpose.",
-      "A story where appearances deceive, and the bonds formed behind prison walls transcend ordinary friendship. The narrator's perspective adds depth to this tale of justice and redemption.",
-      "The truth behind decades of careful planning finally comes to light, revealing an extraordinary tale of patience and determination."
+      "In the midst of chaos, a group of men embark on an extraordinary mission that challenges their understanding of duty and sacrifice. Their journey tests the limits of human courage.",
+      "As they traverse through hostile territory, each step brings them closer to their objective. The weight of their mission grows heavier with every passing moment.",
+      "Leadership and loyalty are put to the ultimate test as a captain leads his men on a seemingly impossible quest to find one soldier. The cost of war becomes increasingly apparent.",
+      "Through the fog of war, a small unit searches for a needle in a haystack. Their mission raises questions about the value of one life against many.",
+      "The brutal reality of their search unfolds against the backdrop of history's greatest conflict, where the line between duty and humanity becomes increasingly blurred."
     ],
-    reviewByGod: "A masterpiece that explores the indomitable human spirit and the power of hope. Through its deliberate pacing and rich character development, this prison drama transcends its setting to deliver a universal message about freedom, friendship, and the resilience of the human soul.",
-    rating: "4.9/5 - Reviewdle God"
+    reviewByGod: "A masterpiece that captures the raw intensity and human cost of war while exploring themes of brotherhood, sacrifice, and the moral complexities of conflict. Through its unflinching lens, this film redefines the way we understand and remember one of history's most pivotal moments.",
+    rating: "4.8/5 - Reviewdle God"
   }
 ];
 
